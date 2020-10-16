@@ -2,6 +2,12 @@ from flask import Flask, flash, request, redirect, url_for, render_template, sen
 import os
 import sys
 
+#TO RUN:
+#export FLASK_APP=main.py
+#export FLASK_DEBUG=1
+#flask run
+# need to be in the /FlaskServer directory. 
+
 
 app = Flask(__name__)
 if sys.version_info[0] < 3:
