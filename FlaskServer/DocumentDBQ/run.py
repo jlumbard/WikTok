@@ -4,7 +4,7 @@ import azure.cosmos.exceptions as exceptions
 from azure.cosmos.partition_key import PartitionKey
 import datetime
 
-import FlaskServer.Config.CosmosConfig as config
+from Config import CosmosConfig as config
 
 # ----------------------------------------------------------------------------------------------------------
 # Prerequistes -
@@ -22,7 +22,6 @@ HOST = config.settings['host']
 MASTER_KEY = config.settings['master_key']
 DATABASE_ID = config.settings['database_id']
 CONTAINER_ID = config.settings['container_id']
-
 
 def create_items(container):
     print('Creating Items')
@@ -176,6 +175,8 @@ def run_sample():
             db = client.create_database(id=DATABASE_ID)
 
         except exceptions.CosmosResourceExistsError:
+            print("ERRRORRRRR")
+            db = client.get_database_client(DATABASE_ID)
             pass
 
         # setup container for this sample
@@ -184,6 +185,7 @@ def run_sample():
             print('Container with id \'{0}\' created'.format(CONTAINER_ID))
 
         except exceptions.CosmosResourceExistsError:
+            
             print('Container with id \'{0}\' was found'.format(CONTAINER_ID))
 
         scale_container(container)

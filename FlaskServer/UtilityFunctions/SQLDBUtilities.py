@@ -1,11 +1,11 @@
 from sqlalchemy import create_engine, text
-from FlaskServer.Models.user import user 
+from Models.user import user 
 import pandas
 from datetime import datetime, timedelta
 import bcrypt
 from flask import session
 import uuid
-import FlaskServer.Config.SQLConfig as sqlConfig
+import Config.SQLConfig as sqlConfig
 
 
 def getEngine():

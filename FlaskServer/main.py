@@ -1,7 +1,8 @@
 from flask import Flask, flash, request, redirect, url_for, render_template, send_from_directory, session, jsonify, make_response
 import os
 import sys
-import UtilityFunctions.DBUtilities as DBUtilities
+import UtilityFunctions.SQLDBUtilities as DBUtilities
+import DocumentDBQ.run as run
 
 #TO RUN:
 #export FLASK_APP=main.py
@@ -47,8 +48,6 @@ def pushUserInteraction():
     DBUtilities.initiateDatabase()
 
 
-
-
     #passes info in a POST request about what the user did. No return type
     # how long did they spend on the article. What is the content of the article?
     # did they click on anything? 
@@ -59,3 +58,10 @@ def pushUserInteraction():
 @app.route('/signUp',methods=['POST'])
 def signUp():
     print("sign up ")
+
+
+@app.route('/test',methods=['GET'])
+def test():
+    run.run_sample()
+    print("test")
+    return('test')
