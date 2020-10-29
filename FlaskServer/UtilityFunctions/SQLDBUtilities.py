@@ -1,11 +1,11 @@
 from sqlalchemy import create_engine, text
-from Models.user import user 
+from Models.user import user  # pylint: disable=import-error
 import pandas
 from datetime import datetime, timedelta
 import bcrypt
 from flask import session
 import uuid
-import Config.SQLConfig as sqlConfig
+import Config.SQLConfig as sqlConfig # pylint: disable=import-error
 
 
 def getEngine():

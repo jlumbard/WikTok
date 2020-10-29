@@ -4,7 +4,7 @@ import azure.cosmos.exceptions as exceptions
 from azure.cosmos.partition_key import PartitionKey
 import datetime
 
-from Config import CosmosConfig as config
+from Config import CosmosConfig as config # pylint: disable=import-error
 
 # ----------------------------------------------------------------------------------------------------------
 # Prerequistes -
