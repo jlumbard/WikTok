@@ -2,7 +2,9 @@ from flask import Flask, flash, request, redirect, url_for, render_template, sen
 import os
 import sys
 import UtilityFunctions.SQLDBUtilities as DBUtilities
+import UtilityFunctions.CosmosDBUtilities as CosmosUtilities
 import DocumentDBQ.run as run
+import UtilityFunctions.SessionUtilities as SessionUtilities
 
 #TO RUN:
 #export FLASK_APP=main.py
@@ -43,22 +45,57 @@ def getNextArticle():
 @app.route('/pushUserInteractionData',methods=['POST'])
 def pushUserInteraction():
     checkUserCookie = request.form.get('sessionToken',None)
+    checkUserID = request.form.get('userID',None)
 
-    #Check User Token
-    DBUtilities.initiateDatabase()
+    #Check that they're logged in. This is an API enpoint, so it is ok if these are in the request. 
+    #The below might work without params, depends how API works with session
+    loggedIn = SessionUtilities.checkLoggedIn(checkUserID, checkUserCookie)
+    if(loggedIn == False):
+        session.pop('')
+        #probs returning a redirect would be better
+        return "Error"
 
+    
+    #don't need these things anymore
+    ModifiedUserInteraction = request.form
+    request.form.pop('user')
+    request.form.pop('sessionID')
 
     #passes info in a POST request about what the user did. No return type
     # how long did they spend on the article. What is the content of the article?
     # did they click on anything? 
 
+    CosmosUtilities.pushUserData(request.form)
     # THis data is all used to then push to the database so we know more about user tendencies. 
-    return "NOT IMPLEMENTED"
+    return "Nothing"
 
 @app.route('/signUp',methods=['POST'])
 def signUp():
     print("sign up ")
+    emailExists = DBUtilities.getUser(request.form['email'])
+    if(emailExists == False):
+        DBUtilities.addUser(request.form['email'], request.form['password'],request.form['fname'],request.form['lname'],1)
+        #SHould probs actually return a redirect. 
+        return "SUCCESS"
+    else:
+        return "FAILED"
+        #Fails because user already exists
 
+@app.route('/signIn', methods=['GET','POST'])
+def signIn():
+    print('signin')
+    username = request.form.get('uname',None)
+    pword = request.form.get('pword',None)
+
+    if(DBUtilities.checkUser(request.form['email'], request.form['password'])):
+        print("SIGNED IN!")
+        user = DBUtilities.getUser(request.form['email'])
+        SessionUtilities.addSessionCookie(user)
+        return redirect(url_for('hello'))
+    else:
+        print("NOT SIGNED IN.")
+        # Add some sort of flag here for something didn't work
+        session['alert'] = "Incorrect credentials"
 
 @app.route('/test',methods=['GET'])
 def test():
