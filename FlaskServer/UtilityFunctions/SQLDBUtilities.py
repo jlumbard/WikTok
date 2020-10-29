@@ -1,16 +1,16 @@
 from sqlalchemy import create_engine, text
-#REally confused why the below errors
-from Models.user import user # pylint: disable=import-error
+from FlaskServer.Models.user import user 
 import pandas
 from datetime import datetime, timedelta
 import bcrypt
 from flask import session
 import uuid
+import FlaskServer.Config.SQLConfig as sqlConfig
 
 
 def getEngine():
     #This returns the sqlalchemy connection object that we use to make queries
-    return create_engine('mysql+mysqldb://root:M6nkt7hcvcaoBFsk@34.95.12.1/WikTok') 
+    return create_engine(sqlConfig.settings['sqlString']) 
 
 def initiateDatabase():
     # This only needs to be run once, but is left in for reference. 

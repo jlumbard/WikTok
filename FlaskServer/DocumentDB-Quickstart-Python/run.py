@@ -4,7 +4,7 @@ import azure.cosmos.exceptions as exceptions
 from azure.cosmos.partition_key import PartitionKey
 import datetime
 
-import config
+import FlaskServer.Config.CosmosConfig as config
 
 # ----------------------------------------------------------------------------------------------------------
 # Prerequistes -
