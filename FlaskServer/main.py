@@ -3,8 +3,9 @@ import os
 import sys
 import UtilityFunctions.SQLDBUtilities as DBUtilities
 import UtilityFunctions.CosmosDBUtilities as CosmosUtilities
-import DocumentDBQ.run as run
 import UtilityFunctions.SessionUtilities as SessionUtilities
+import Recommender.PredictNextArticle as PredictNextArticle
+import UtilityFunctions.ArticleDataUtilities as ArticleDataUtilities
 
 #TO RUN:
 #export FLASK_APP=main.py
@@ -29,17 +30,18 @@ def before_request():
 def homeTestPage():
     return ("Hello from flask!")
 
-#Expected endpoints 
-
-
 @app.route('/getNextArticle',methods=['GET'])
 def getNextArticle():
     #probably passes the userID or guid on their session. 
     #article they're currently on and their engagement with it should already be pushed, seperate endpoint.
     # or should it?
-
     #returns, next article to nav to and then client side javascript just redirects them there.
-    return "NOT IMPLEMENTED"
+
+    nextArticleUrl = PredictNextArticle.predictNextArticlev1()
+
+    ArticleDataUtilities.pushDataOnArticle(nextArticleUrl)
+
+    return redirect(nextArticleUrl)
 
 
 @app.route('/pushUserInteractionData',methods=['POST'])
@@ -54,20 +56,20 @@ def pushUserInteraction():
         session.pop('')
         #probs returning a redirect would be better
         return "Error"
-
     
     #don't need these things anymore
     ModifiedUserInteraction = request.form
-    request.form.pop('user')
-    request.form.pop('sessionID')
+    ModifiedUserInteraction.form.pop('user')
+    ModifiedUserInteraction.form.pop('sessionID')
 
     #passes info in a POST request about what the user did. No return type
     # how long did they spend on the article. What is the content of the article?
     # did they click on anything? 
 
-    CosmosUtilities.pushUserData(request.form)
+    CosmosUtilities.pushUserData(ModifiedUserInteraction.form)
     # THis data is all used to then push to the database so we know more about user tendencies. 
-    return "Nothing"
+
+    return getNextArticle()
 
 @app.route('/signUp',methods=['POST'])
 def signUp():
@@ -99,6 +101,5 @@ def signIn():
 
 @app.route('/test',methods=['GET'])
 def test():
-    run.run_sample()
     print("test")
     return('test')
