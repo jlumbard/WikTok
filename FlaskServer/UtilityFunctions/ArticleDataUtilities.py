@@ -17,13 +17,8 @@ from scipy.stats import linregress
 #https://en.wikipedia.org/wiki/Wikipedia:Database_download
 
 def returnDataOnArticle(articleLink):
-    #scrape it from the above endpoints. Keywords in the article?
-
-    #/metrics/pageviews/aggregate/{project}/{access}/{agent}/{granularity}/{start}/{end}
-    
     #https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/University_of_Regina/daily/2020101000/2020103000
     articleTitle = articleLink.split('/wiki/')[1]
-
     articleData = {}
     articleData['title'] = articleTitle
     articleData['pageViews'],articleData['pageViewTrend'] = getViewNumberAndTrend(articleTitle)
@@ -43,11 +38,10 @@ def getViewNumberAndTrend(articleTitle):
         totalViews = totalViews+weeklyMetric['views']
         viewEachMonth.append(weeklyMetric['views'])
     #Now we have total views, get the trend in the data
-
     trendVal = getViewNumberTrend(viewEachMonth)
-    return (totalViews, getViewNumberTrend(viewEachMonth))
+    return (totalViews, trendVal)
 
-
+#we could do a unit test here
 def getViewNumberTrend(arrayOfValues):
     #The below is like just a 1 to x counter
     defaultCounter = []

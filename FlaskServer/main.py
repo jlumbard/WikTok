@@ -6,6 +6,7 @@ import UtilityFunctions.CosmosDBUtilities as CosmosUtilities
 import UtilityFunctions.SessionUtilities as SessionUtilities
 import Recommender.PredictNextArticle as PredictNextArticle
 import UtilityFunctions.ArticleDataUtilities as ArticleDataUtilities
+from flask_cors import CORS, cross_origin
 
 #TO RUN:
 #export FLASK_APP=main.py
@@ -15,6 +16,7 @@ import UtilityFunctions.ArticleDataUtilities as ArticleDataUtilities
 
 
 app = Flask(__name__)
+CORS(app)
 if sys.version_info[0] < 3:
     raise Exception("Must be using Python 3")
 
@@ -30,18 +32,21 @@ def before_request():
 def homeTestPage():
     return ("Hello from flask!")
 
+@app.route('/getNextArticleRedirect',methods=['GET'])
+@cross_origin()
+def getNextArticleRedirect():
+    return redirect(getNextArticle())
+
 @app.route('/getNextArticle',methods=['GET'])
+@cross_origin()
 def getNextArticle():
     #probably passes the userID or guid on their session. 
     #article they're currently on and their engagement with it should already be pushed, seperate endpoint.
     # or should it?
     #returns, next article to nav to and then client side javascript just redirects them there.
-
     nextArticleUrl = PredictNextArticle.predictNextArticlev1()
-
     ArticleDataUtilities.pushDataOnArticle(nextArticleUrl)
-
-    return redirect(nextArticleUrl)
+    return nextArticleUrl
 
 
 @app.route('/pushUserInteractionData',methods=['POST'])
@@ -70,6 +75,13 @@ def pushUserInteraction():
     # THis data is all used to then push to the database so we know more about user tendencies. 
 
     return getNextArticle()
+
+
+@app.route('/insert',methods=['GET'])
+@cross_origin()
+def getInsert():
+    return render_template('LeftRightArrows.html')
+    return ('<div id="testt">testtt</div>')
 
 @app.route('/signUp',methods=['POST'])
 def signUp():

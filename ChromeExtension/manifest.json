@@ -4,6 +4,14 @@
   "description": "Build an Extension!",
   "permissions": ["activeTab","declarativeContent", "storage"],
   "options_page": "options.html",
+  "web_accessible_resources": [
+    "https://127.0.0.1:5000/insert"],
+  "content_scripts": [
+    {
+      "matches": ["https://en.wikipedia.org/*"],
+      "js": ["content-script.js"]
+    }
+  ],
   "background":{
     "scripts":["background.js"],
     "persistent":false
