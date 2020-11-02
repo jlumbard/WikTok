@@ -1,15 +1,11 @@
 requests
 flask
-json
 flask_cors
-sys
-os
 azure-core==1.1.1
 azure-cosmos==4.0.0b6
 certifi==2019.11.28
 chardet==3.0.4
 idna==2.8
-requests==2.22.0
 six==1.13.0
 urllib3==1.25.7
 virtualenv==16.7.9
@@ -18,5 +14,4 @@ scipy
 datetime
 pandas
 bcrypt
-uuid
 sqlalchemy
