@@ -16,9 +16,15 @@ from flask_cors import CORS, cross_origin
 
 
 app = Flask(__name__)
+
+
+
+app.config['SESSION_COOKIE_SAMESITE'] = "None"
+app.config['SESSION_COOKIE_SECURE'] = True
 CORS(app)
 if sys.version_info[0] < 3:
     raise Exception("Must be using Python 3")
+app.secret_key = '\xf0\x07\xee\xa1\xde\x92cQp\x8e\x0c\xf7\x9f\xd3x\xfa\xb1\xd0\x03\xfdIq\xe3'
 
 @app.before_request
 def before_request():
@@ -30,7 +36,11 @@ def before_request():
 @app.route('/')
 @app.route('/index')
 def homeTestPage():
-    return ("Hello from flask!")
+    print(session)
+    if(session.get('user',False)):
+        return ("Hello from flask! You are signed in.")
+    else:
+        return ("Hello from flask! You are NOT signed in.")
 
 @app.route('/getNextArticleRedirect',methods=['GET'])
 @cross_origin()
@@ -38,56 +48,56 @@ def getNextArticleRedirect():
     return redirect(getNextArticle())
 
 @app.route('/getNextArticle',methods=['GET'])
-@cross_origin()
+@cross_origin(supports_credentials=True, origin=['https://en.wikipedia.org/', 'https://127.0.0.1/'])
 def getNextArticle():
+    # print(session.get('user',None))
+    # print(session)
     #probably passes the userID or guid on their session. 
     #article they're currently on and their engagement with it should already be pushed, seperate endpoint.
     # or should it?
     #returns, next article to nav to and then client side javascript just redirects them there.
     nextArticleUrl = PredictNextArticle.predictNextArticlev1()
     ArticleDataUtilities.pushDataOnArticle(nextArticleUrl)
+    print(nextArticleUrl)
     return nextArticleUrl
 
-
 @app.route('/pushUserInteractionData',methods=['POST'])
+@cross_origin(supports_credentials=True, origin=['https://en.wikipedia.org/', 'https://127.0.0.1/'])
 def pushUserInteraction():
-    checkUserCookie = request.form.get('sessionToken',None)
-    checkUserID = request.form.get('userID',None)
-
+    print('timespent')
     #Check that they're logged in. This is an API enpoint, so it is ok if these are in the request. 
     #The below might work without params, depends how API works with session
-    loggedIn = SessionUtilities.checkLoggedIn(checkUserID, checkUserCookie)
+    loggedIn = SessionUtilities.checkLoggedIn()
     if(loggedIn == False):
-        session.pop('')
         #probs returning a redirect would be better
+        print("error incoming")
         return "Error"
+    print('no error')
+    print(request.json)
+    print(request.form['timeSpent'])
     
     #don't need these things anymore
     ModifiedUserInteraction = request.form
     ModifiedUserInteraction.form.pop('user')
     ModifiedUserInteraction.form.pop('sessionID')
-
     #passes info in a POST request about what the user did. No return type
     # how long did they spend on the article. What is the content of the article?
     # did they click on anything? 
-
     CosmosUtilities.pushUserData(ModifiedUserInteraction.form)
     # THis data is all used to then push to the database so we know more about user tendencies. 
-
-    return getNextArticle()
-
+    return "True"
 
 @app.route('/insert',methods=['GET'])
 @cross_origin()
 def getInsert():
     return render_template('LeftRightArrows.html')
-    return ('<div id="testt">testtt</div>')
 
 @app.route('/signUp',methods=['POST'])
 def signUp():
     print("sign up ")
     emailExists = DBUtilities.getUser(request.form['email'])
-    if(emailExists == False):
+    print(emailExists)
+    if(emailExists == None):
         DBUtilities.addUser(request.form['email'], request.form['password'],request.form['fname'],request.form['lname'],1)
         #SHould probs actually return a redirect. 
         return "SUCCESS"
@@ -105,11 +115,19 @@ def signIn():
         print("SIGNED IN!")
         user = DBUtilities.getUser(request.form['email'])
         SessionUtilities.addSessionCookie(user)
-        return redirect(url_for('hello'))
+        return redirect(url_for('homeTestPage'))
     else:
         print("NOT SIGNED IN.")
         # Add some sort of flag here for something didn't work
         session['alert'] = "Incorrect credentials"
+
+@app.route('/logIn', methods=['GET'])
+def logInPage():
+    return render_template('login.html')
+
+@app.route('/signUp', methods=['GET'])
+def signUpPage():
+    return render_template('SignUp.html')
 
 @app.route('/test',methods=['GET'])
 def test():

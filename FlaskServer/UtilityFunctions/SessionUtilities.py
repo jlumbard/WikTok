@@ -3,6 +3,7 @@ from flask import session
 from Models.user import user  # pylint: disable=import-error
 
 
+
 def checkLoggedIn(userID = None, sessionID = None):
     if(userID == None):
         userID = session['user']['id']
@@ -10,12 +11,15 @@ def checkLoggedIn(userID = None, sessionID = None):
         sessionID = session['sessionID']
     #if userID matches the sessionID they passed then we're chilling
     sessionIDTest = DBUtilities.getUserIdBySessionKey(sessionID)
-    if(sessionIDTest != False): #The above function returns false if the sessionID doesnt exist or is invalid
-        return False;
+    if(sessionIDTest.userID == False): #The above function returns false if the sessionID doesnt exist or is invalid
+        return False
     else:
-        if(sessionID == sessionIDTest):
+        if(userID == sessionIDTest.userID):
             return True;
+        else:
+            return False
 
 def addSessionCookie(sessionUser):
-    session['user'] = user.tracker.serialize(user.tracker(sessionUser.trackerID, sessionUser.fname+" "+sessionUser.lname, sessionUser.email, sessionUser.level))
-    session['login'] = DBUtilities.addSessionCookie()
+    print("here")
+    session['user'] = user.serialize(user(sessionUser.userID, sessionUser.fname+" "+sessionUser.lname, sessionUser.email, sessionUser.level))
+    session['sessionID'] = DBUtilities.addSessionCookie()

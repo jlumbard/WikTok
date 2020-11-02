@@ -36,7 +36,7 @@ def addSessionCookie():
 
 def getUserIdBySessionKey(ID):
     database = getEngine()
-    stmt = text("SELECT * FROM TrackerSession WHERE uniqueIDKey = :UniqueID")
+    stmt = text("SELECT * FROM UserSession WHERE uniqueIDKey = :UniqueID")
     #FIRST should be fine here...
     result = database.execute(stmt, UniqueID = ID).first()
     if(result != None):
@@ -48,7 +48,7 @@ def getUserIdBySessionKey(ID):
 
 def getUser(username):
     database = getEngine()
-    stmt = text("SELECT * FROM Tracker WHERE email = :email")
+    stmt = text("SELECT * FROM User WHERE email = :email")
     return database.execute(stmt, email = username).first()
 
 def checkUser(email, pword):
