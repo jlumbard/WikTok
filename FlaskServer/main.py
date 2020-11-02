@@ -64,26 +64,20 @@ def getNextArticle():
 @app.route('/pushUserInteractionData',methods=['POST'])
 @cross_origin(supports_credentials=True, origin=['https://en.wikipedia.org/', 'https://127.0.0.1/'])
 def pushUserInteraction():
-    print('timespent')
     #Check that they're logged in. This is an API enpoint, so it is ok if these are in the request. 
     #The below might work without params, depends how API works with session
     loggedIn = SessionUtilities.checkLoggedIn()
     if(loggedIn == False):
         #probs returning a redirect would be better
-        print("error incoming")
         return "Error"
-    print('no error')
-    print(request.json)
-    print(request.form['timeSpent'])
     
     #don't need these things anymore
-    ModifiedUserInteraction = request.form
-    ModifiedUserInteraction.form.pop('user')
-    ModifiedUserInteraction.form.pop('sessionID')
+    ModifiedUserInteraction = request.json
+    ModifiedUserInteraction['user'] = session['user']['id']
     #passes info in a POST request about what the user did. No return type
     # how long did they spend on the article. What is the content of the article?
     # did they click on anything? 
-    CosmosUtilities.pushUserData(ModifiedUserInteraction.form)
+    CosmosUtilities.pushUserData(ModifiedUserInteraction)
     # THis data is all used to then push to the database so we know more about user tendencies. 
     return "True"
 

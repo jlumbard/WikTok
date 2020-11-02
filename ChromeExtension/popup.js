@@ -17,3 +17,14 @@ changeColor.onclick = function(element) {
         {code: 'document.body.style.backgroundColor = "' + color + '";'});
   });
 };
+
+document.addEventListener("DOMContentLoaded", function() {
+  document.getElementById('loginLink').addEventListener('click',function(event){
+    chrome.tabs.create({url: event.target.getAttribute('href')});
+    return false;
+  });
+  document.getElementById('signUpLink').addEventListener('click',function(event){
+    chrome.tabs.create({url: event.target.getAttribute('href')});
+    return false;
+  });
+});

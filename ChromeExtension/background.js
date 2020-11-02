@@ -4,6 +4,9 @@
 
 'use strict';
 
+
+
+
 chrome.runtime.onInstalled.addListener(function() {
   chrome.storage.sync.set({color: '#3aa757'}, function() {
     console.log("The color is green.");
@@ -21,3 +24,26 @@ chrome.runtime.onInstalled.addListener(function() {
 
   });
 });
+
+// chrome.webNavigation.onCompleted.addListener(function(event) {
+//   alert(event.url + " onCompleted")
+
+//   window.addEventListener('beforeunload', function (e) {
+//     // Cancel the event
+//     console.log('test beforeunload')
+//     e.returnValue = '';
+//   });
+  
+//   chrome.storage.sync.set({color: '#3aa757'}, function() {
+//     console.log("The color is green.");
+    
+    
+//   });
+// }, {url: [{urlMatches : 'https://en.wikipedia.org/'}]});
+
+// chrome.webNavigation.onBeforeNavigate.addListener(function(event) {
+//   alert(event.url+" onBeforeRequest")
+//   chrome.storage.sync.set({color: '#3aa757'}, function() {
+//     console.log("The color is green.");
+//   });
+// }, {urls: ['https://en.wikipedia.org/*']});
