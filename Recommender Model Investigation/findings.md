@@ -13,6 +13,9 @@ There are two basic approaches to collaborative filtering, user-based and item-b
 There are also two overarching techniques for navigating data, memomory-based and model-based.
 (1) memory-based involves finding similar users based on some distance metric
   - ex: cosine similarity (takes dot product of two vectors to find distance measured as angle between)
+  
+  ![](cosinesimilarity.png)
+  
 (2) model-based applies machine learning models to user's ratings datasets to predict how likely it is that a user would like anew item
   - ex: matrix factorization 
   
