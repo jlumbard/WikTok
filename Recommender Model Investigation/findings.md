@@ -3,6 +3,7 @@
 
 ### Two basic CF approaches
 There are two basic approaches to collaborative filtering, user-based and item-based. 
+
 (1) user-based recommends items to a user through finding similar users (from selected criteria) and recommending new items that the similar users liked
   - ex: Both Nick and Brock really liked Moneyball and The Big Short but they both really didn't like Cats (with James Corden). Thus, based on these preferences we can say that Nick and Brock are similar users. Brock also really liked the Steve Jobs movie he just watched with Kev, so the system recommends Steve Jobs to Nick.
  
