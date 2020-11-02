@@ -39,4 +39,8 @@ In practice, item-based works better than user-based. Generally, there are a lot
 7. returns sorted list of most similar movies (items)
 8. process steps were similarly repeated for user-based, only difference is cosine similarity computed between users
 
+### Next steps
+- apply memory-based CF techniques to a real world dataset
+- learn model based approach
+
   
