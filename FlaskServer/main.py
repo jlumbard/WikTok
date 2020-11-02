@@ -38,9 +38,9 @@ def before_request():
 def homeTestPage():
     print(session)
     if(session.get('user',False)):
-        return ("Hello from flask! You are signed in.")
+        return ("Hello from WikTok! You are signed in.")
     else:
-        return ("Hello from flask! You are NOT signed in.")
+        return ("Hello from WikTok! You are NOT signed in. Sign in at <a href='/logIn'>/logIn</a>")
 
 @app.route('/getNextArticleRedirect',methods=['GET'])
 @cross_origin()

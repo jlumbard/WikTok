@@ -15,3 +15,5 @@ datetime
 pandas
 bcrypt
 sqlalchemy
+bs4
+rake_nltk

@@ -3,6 +3,9 @@ from datetime import datetime, timedelta
 import json
 import requests
 from scipy.stats import linregress
+from rake_nltk import Rake
+from bs4 import BeautifulSoup 
+import nltk
 
 #All wikipedia REST documentations:
 #https://wikimedia.org/api/rest_v1/#/
@@ -21,14 +24,19 @@ def returnDataOnArticle(articleLink):
     articleTitle = articleLink.split('/wiki/')[1]
     articleData = {}
     articleData['title'] = articleTitle
-    articleData['pageViews'],articleData['pageViewTrend'] = getViewNumberAndTrend(articleTitle)
+    articleData['pageViews'],articleData['pageViewTrend'], articleData['rankedKeywords'] = getMetrics(articleTitle)
     return articleData
 
-def getViewNumberAndTrend(articleTitle):
+def getMetrics(articleTitle):
     end = datetime.today().strftime('%Y%m%d00')
     start = (datetime.today() - timedelta(days=6*30)).strftime('%Y%m%d00')
     pageViewURL = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/" + articleTitle +"/monthly/"+start+"/"+end
     r = requests.get(pageViewURL)
+
+    pageContentURL = 'https://en.wikipedia.org/wiki/' + articleTitle
+    pageR = requests.get(pageContentURL)
+
+    rankedKeywords = getRankedKeywordsFromArticle(pageR)
 
     totalViews = 0
     viewEachMonth = []
@@ -39,7 +47,7 @@ def getViewNumberAndTrend(articleTitle):
         viewEachMonth.append(weeklyMetric['views'])
     #Now we have total views, get the trend in the data
     trendVal = getViewNumberTrend(viewEachMonth)
-    return (totalViews, trendVal)
+    return (totalViews, trendVal, rankedKeywords)
 
 #we could do a unit test here
 def getViewNumberTrend(arrayOfValues):
@@ -54,3 +62,15 @@ def pushDataOnArticle(articleLink):
     articleData = returnDataOnArticle(articleLink)
     CosmosDBUtilities.pushWikiPageData(articleData)
     #This doesn't have any error handling
+
+def getRankedKeywordsFromArticle(articleText):
+    #articleText will be the whole html
+    #nltk.download()
+    soup = BeautifulSoup(articleText.text)
+    ps = soup.select("p")
+    intro = '\n'.join([ para.text for para in ps])
+    rake = Rake()
+    rake.extract_keywords_from_text(intro)
+    keywordsWithScores = rake.get_ranked_phrases_with_scores()
+    top5KeywordsWithScores = [keywordsWithScores[0],keywordsWithScores[1],keywordsWithScores[2],keywordsWithScores[3],keywordsWithScores[4],keywordsWithScores[5],keywordsWithScores[6],keywordsWithScores[7],keywordsWithScores[8],keywordsWithScores[9]]
+    return 
