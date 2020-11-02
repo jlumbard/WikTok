@@ -1,3 +1,5 @@
 
 #Private Config stuff
 FlaskServer/Config
+__pycache__/
+.vscode/
