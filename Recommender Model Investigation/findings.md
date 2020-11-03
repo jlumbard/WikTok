@@ -39,8 +39,16 @@ In practice, item-based works better than user-based. Generally, there are a lot
 7. returns sorted list of most similar movies (items)
 8. process steps were similarly repeated for user-based, only difference is cosine similarity computed between users
 
+### Applying to a real world dataset
+Applied the memory-based approach to a real world movies dataset (MovieLens) which has about 10,000 titles in it. This time the pearson correlation was calculated, which has a built in normalization step. Again, a hypothetical "action movie lover" was simulated by inputting high ratings for action movies (like fast and the furious), and low ratings for other romantic/dramatic movies. The resultant movie recommendations were consistent with the user's preferences - the other fast and furious movies were recommended and Mission Impossibe.
+
+### Initial conclusions
+- memory-based approach is a viable one to try out for our project, it works with real world data
+- item-item CF is more practical to use
+- cosine similarity or pearson correlation can be used to calculate similarity matrix (pearson does not require an additional normalization calculation)
+- if we want to go with this approach, we will have to be very explicit with the hypothetical user's preferences when testing/demoing. (ex: user really likes reading about animals, user really does not like reading about music) --> this will show effectiveness of recommendation engine very clearly
+
 ### Next steps
-- apply memory-based CF techniques to a real world dataset
-- learn model based approach
+- learn model based approach and compare
 
   
