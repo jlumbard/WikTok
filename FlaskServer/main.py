@@ -21,7 +21,7 @@ app = Flask(__name__)
 
 app.config['SESSION_COOKIE_SAMESITE'] = "None"
 app.config['SESSION_COOKIE_SECURE'] = True
-CORS(app)
+CORS(app, supports_credentials=True)
 if sys.version_info[0] < 3:
     raise Exception("Must be using Python 3")
 app.secret_key = '\xf0\x07\xee\xa1\xde\x92cQp\x8e\x0c\xf7\x9f\xd3x\xfa\xb1\xd0\x03\xfdIq\xe3'
@@ -86,38 +86,69 @@ def pushUserInteraction():
 def getInsert():
     return render_template('LeftRightArrows.html')
 
+@app.route('/getUser',methods=['GET'])
+@cross_origin(supports_credentials=True, origin=['https://en.wikipedia.org/', 'https://127.0.0.1/', 'http://127.0.0.1/'])
+def getUserInfo():
+    print(session)
+    if(session.get('user',False)):
+        sessionUser = CosmosUtilities.getUserIdBySessionKey(session['sessionID'])
+        #passes back too much...
+        return CosmosUtilities.getUserByID(sessionUser['userID'])
+    else:
+        return ("Redirect Should happen here")
+
 @app.route('/signUp',methods=['POST'])
+@cross_origin(supports_credentials=True, origin=['https://en.wikipedia.org/', 'https://127.0.0.1/', 'http://127.0.0.1/'])
 def signUp():
+    print(request.json)
+    print(request.json['fname'])
     print("sign up ")
-    emailExists = DBUtilities.getUser(request.form['email'])
+    emailExists = CosmosUtilities.getUser(request.json['email'])
     print(emailExists)
     if(emailExists == None):
-        DBUtilities.addUser(request.form['email'], request.form['password'],request.form['fname'],request.form['lname'],1)
+        CosmosUtilities.addUser(request.json['email'], request.json['password'],request.json['fname'],request.json['lname'],1)
         #SHould probs actually return a redirect. 
+        print("success in sign up.")
         return "SUCCESS"
     else:
+        print("failed sign up")
         return "FAILED"
         #Fails because user already exists
 
 @app.route('/signIn', methods=['GET','POST'])
+@cross_origin(supports_credentials=True, origin=['https://en.wikipedia.org/', 'https://127.0.0.1/', 'http://127.0.0.1/'])
 def signIn():
     print('signin')
-    username = request.form.get('uname',None)
-    pword = request.form.get('pword',None)
+    print(request.json)
+    username = request.json.get('uname',None)
+    pword = request.json.get('pword',None)
 
-    if(DBUtilities.checkUser(request.form['email'], request.form['password'])):
+    #With incorrect credentials
+    if(username == None or pword == None):
+        return "Error"
+
+    if(CosmosUtilities.checkUser(request.json['uname'], request.json['pword'])):
         print("SIGNED IN!")
-        user = DBUtilities.getUser(request.form['email'])
+        user = CosmosUtilities.getUser(request.json['uname'])
         SessionUtilities.addSessionCookie(user)
-        return redirect(url_for('homeTestPage'))
+        return user
     else:
         print("NOT SIGNED IN.")
         # Add some sort of flag here for something didn't work
         session['alert'] = "Incorrect credentials"
+        return "error",404
 
 @app.route('/logIn', methods=['GET'])
 def logInPage():
     return render_template('login.html')
+
+@app.route('/signOut', methods=['GET'])
+def signOutPage():
+    if(session.get('sessionID')):
+        session.pop('sessionID')
+    if(session.get('user')):
+        session.pop('user')
+    return redirect(url_for('homeTestPage'))
 
 @app.route('/signUp', methods=['GET'])
 def signUpPage():

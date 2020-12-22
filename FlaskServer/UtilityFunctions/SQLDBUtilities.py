@@ -17,6 +17,7 @@ def initiateDatabase():
     database = getEngine()
     database.execute("CREATE TABLE IF NOT EXISTS User (userID int NOT NULL AUTO_INCREMENT, email varchar(100), hashedPassword varchar(150), fname varchar(20), lname varchar(30), level int, PRIMARY KEY(userID), UNIQUE(email))")
     database.execute("CREATE TABLE IF NOT EXISTS UserSession (userID int, uniqueIDKey varchar(38), expiry DATETIME , PRIMARY KEY(uniqueIDKey), FOREIGN KEY(userID) REFERENCES User(userID))")
+    database.execute("CREATE TABLE IF NOT EXISTS AccessCode(UIdentifier varchar(38), userID int, PRIMARY KEY(UIdentifier), FOREIGN KEY (userID) REFERENCES User(userID))")
 
 def addUser(email, password, fname, lname, level):
     database = getEngine()

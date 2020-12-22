@@ -73,4 +73,4 @@ def getRankedKeywordsFromArticle(articleText):
     rake.extract_keywords_from_text(intro)
     keywordsWithScores = rake.get_ranked_phrases_with_scores()
     top5KeywordsWithScores = [keywordsWithScores[0],keywordsWithScores[1],keywordsWithScores[2],keywordsWithScores[3],keywordsWithScores[4],keywordsWithScores[5],keywordsWithScores[6],keywordsWithScores[7],keywordsWithScores[8],keywordsWithScores[9]]
-    return 
+    return top5KeywordsWithScores
