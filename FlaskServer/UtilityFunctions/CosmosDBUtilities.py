@@ -50,6 +50,7 @@ def pushUserData(dataArray):
     dataArray['id'] = str(uuid.uuid4())
     container = getContainer(INTERACTIONS_CONTAINER_ID)
     #The data array below will have to be formatted.
+    print(dataArray)
     container.create_item(body=dataArray)
 
 #AFTER THIS IS SQL IMPORTS THAT WERE MIGRATED. BEWARE, UNTESTED CODE.

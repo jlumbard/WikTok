@@ -13,11 +13,11 @@ def checkLoggedIn(userID = None, sessionID = None):
         if(session.get('sessionID')):
             sessionID = session['sessionID']
     #if userID matches the sessionID they passed then we're chilling
-    sessionIDTest = DBUtilities.getUserIdBySessionKey(sessionID)
-    if(sessionIDTest.userID == False): #The above function returns false if the sessionID doesnt exist or is invalid
+    sessionIDTest = CosmosUtilities.getUserIdBySessionKey(sessionID)
+    if(sessionIDTest['userID'] == False): #The above function returns false if the sessionID doesnt exist or is invalid
         return False
     else:
-        if(userID == sessionIDTest.userID):
+        if(userID == sessionIDTest['userID']):
             return True;
         else:
             return False
