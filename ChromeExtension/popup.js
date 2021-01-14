@@ -18,6 +18,7 @@ changeColor.onclick = function(element) {
   });
 };
 
+
 document.addEventListener("DOMContentLoaded", function() {
   document.getElementById('loginLink').addEventListener('click',function(event){
     chrome.tabs.create({url: event.target.getAttribute('href')});

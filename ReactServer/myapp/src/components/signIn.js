@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TextField, DefaultButton } from '@fluentui/react';
+import { Text, TextField, DefaultButton, TextStyles } from '@fluentui/react';
 
 
 var sectionStyle = {
@@ -24,6 +24,15 @@ var formsStyle = {
 var eachFormsStyle = {
   margin: "10px",
   color: "white"
+}
+
+var textStyle = {
+  
+  fontFamily : "Open Sans",
+  fontSize : "26px",
+  marginTop: "5px",
+  marginBottom: "5px"
+
 }
 
 const overrideButtonStyles = {
@@ -94,9 +103,10 @@ export default class SignIn extends React.Component {
       <div style={sectionStyle}>
         <div style={formsStyle}>
           <div style={eachFormsStyle}>
-            <Text styles={{ fontSize: "36px" }} variant={'mega'} block>
-              Sign In
-        </Text>
+            
+          <p style={textStyle}>
+          Sign In
+          </p>
 
           </div>
           <div style={eachFormsStyle}>

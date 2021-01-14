@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text } from '@fluentui/react';
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import LogoImage from '../images/logo.png';
 
 
 var sectionStyle = {
@@ -26,6 +27,30 @@ var eachFormsStyle = {
   margin: "10px",
   color: "white"
 }
+var textStyle = {
+
+  textAlign:"center",
+  fontFamily: "Open Sans",
+  fontSize: "13vw",
+  marginTop: "5px",
+  marginBottom: "5px"
+
+}
+
+var textStyleSmall = {
+
+  textAlign:"center",
+  fontFamily: "Open Sans",
+  fontSize: "4vw",
+  marginTop: "5px",
+  marginBottom: "5px",
+  color:"white"
+
+}
+
+var ImageStyle = {
+  width: "50%",
+}
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -40,8 +65,8 @@ export default class Home extends React.Component {
   getUserProfile() {
     fetch("https://127.0.0.1:5000/getUser", {
       method: 'GET',
-      mode:'cors',
-      credentials:'include',
+      mode: 'cors',
+      credentials: 'include',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -76,14 +101,16 @@ export default class Home extends React.Component {
 
       return (
         <div style={sectionStyle}>
+          <img style={ImageStyle} src ={LogoImage}></img>
           <div style={formsStyle}>
             <div style={eachFormsStyle}>
-              <Text styles={{ fontSize: "36px" }} variant={'mega'} block>
+              <p style={textStyle}>
                 Home
-        </Text>
-              <Text styles={{ fontSize: "36px" }} variant={'large'} block>
-                Welcome, {this.state.user.fname} !
-        </Text>
+          </p>
+    
+        <p style={textStyleSmall}>
+        Welcome, {this.state.user.fname} !
+          </p>
 
             </div>
           </div>
@@ -96,15 +123,17 @@ export default class Home extends React.Component {
         <div style={sectionStyle}>
           <div style={formsStyle}>
             <div style={eachFormsStyle}>
-              <Text styles={{ fontSize: "36px" }} variant={'mega'} block>
+            <p style={textStyle}>
                 Home
-        </Text>
-              <Text styles={{ fontSize: "36px" }} variant={'large'} block>
-                You're not logged in. 
-                <Link to="/signIn">Sign in Here</Link>
+          </p>
 
-        </Text>
-        
+          <p style={textStyleSmall}>
+                
+                You're not logged in. 
+                <Link style={{color:"white"}} to="/signIn"> Sign in Here</Link>
+
+              </p>
+
 
             </div>
           </div>

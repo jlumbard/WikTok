@@ -3,10 +3,6 @@
 // found in the LICENSE file.
 
 'use strict';
-
-
-
-
 chrome.runtime.onInstalled.addListener(function () {
   chrome.storage.sync.set({ color: '#3aa757' }, function () {
     console.log("The color is green.");
@@ -40,11 +36,12 @@ function shootRequestIfURL(details) {
               crossDomain: true,
               headers: {
                 'Accept': 'text/html',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify({
                 timeSpent: timeObj['timeLoaded'] - Date.now(),
-                liked: obj['articleLiked']
+                liked: obj['articleLiked'],
+                article : currentURL
               })
             })
 
@@ -62,8 +59,6 @@ function shootRequestIfURL(details) {
           console.log("resetTime")
          });
       }
-      
-      // use `url` here inside the callback because it's asynchronous!
     });
   }
 }
