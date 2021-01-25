@@ -22,7 +22,6 @@ USERSESSION_CONTAINER_ID = config.settings['userSession_container_id']
 # above copied from Azure example.
 
 def getContainer(containerID):
-    
     client = cosmos_client.CosmosClient(HOST, {'masterKey': MASTER_KEY}, user_agent="CosmosDBDotnetQuickstart", user_agent_overwrite=True)
     db = client.get_database_client(DATABASE_ID)
     container = db.get_container_client(containerID)
@@ -55,6 +54,7 @@ def pushUserData(dataArray):
 
 #AFTER THIS IS SQL IMPORTS THAT WERE MIGRATED. BEWARE, UNTESTED CODE.
 def addUser(email, password, fname, lname, level):
+    
     id = str(uuid.uuid4())
     container = getContainer(USERS_CONTAINER_ID)
     hashedPword = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
