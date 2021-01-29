@@ -7,6 +7,7 @@ import UtilityFunctions.SessionUtilities as SessionUtilities
 import Recommender.PredictNextArticle as PredictNextArticle
 import UtilityFunctions.ArticleDataUtilities as ArticleDataUtilities
 from flask_cors import CORS, cross_origin
+import pandas as pd
 
 #TO RUN:
 #export FLASK_APP=main.py
@@ -145,6 +146,20 @@ def signIn():
 @app.route('/logIn', methods=['GET'])
 def logInPage():
     return render_template('login.html')
+
+@app.route('/AddDataScripting', methods=['GET'])
+def AddData():
+    df = pd.read_csv('/Users/brocklumbard/Desktop/SampleWikiDB-v1.csv')
+    for i,row in df.iterrows():
+        print("pushing "+ df.at[i,'title'])
+        ArticleDataUtilities.pushDataOnArticle('https://en.wikipedia.org/wiki/' + df.at[i,'title'].replace(' ','_'))
+
+    return "AddedData!"
+
+@app.route('/getData', methods=['GET'])
+def getData():
+    print(pd.DataFrame(CosmosUtilities.getArticles()))
+    return pd.DataFrame(CosmosUtilities.getArticles())
 
 @app.route('/signOut', methods=['GET'])
 def signOutPage():

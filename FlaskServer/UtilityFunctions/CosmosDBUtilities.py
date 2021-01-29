@@ -33,10 +33,10 @@ def initContainers():
     client = cosmos_client.CosmosClient(HOST, {'masterKey': MASTER_KEY}, user_agent="CosmosDBDotnetQuickstart", user_agent_overwrite=True)
     #db = client.create_database(id=DATABASE_ID)
     db = client.get_database_client(DATABASE_ID)
-    #db.create_container(id=INTERACTIONS_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
-    #db.create_container(id=PAGES_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
-    db.create_container(id=USERS_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
-    db.create_container(id=USERSESSION_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
+    db.create_container(id=INTERACTIONS_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
+    db.create_container(id=PAGES_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
+    # db.create_container(id=USERS_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
+    # db.create_container(id=USERSESSION_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
 
 def pushWikiPageData(dataArray):
     #initContainers()
@@ -87,8 +87,32 @@ def getUserIdBySessionKey(ID):
         return False
     return items[0]
 
+def getArticleByTitle(title):
+    container = getContainer(PAGES_CONTAINER_ID)
+    query = "SELECT * FROM PagesV1 us WHERE us.title = @UniqueID"
+
+    items = list(container.query_items(
+        query=query,
+        enable_cross_partition_query=True,
+        parameters=[dict(name="@UniqueID", value=str(title))]
+    ))
+    if(len(items) != 0):
+        return True
+    else:
+        return False
+
+def getArticles():
+    container = getContainer(PAGES_CONTAINER_ID)
+    query = "SELECT * FROM PagesV1 us"
+
+    items = list(container.query_items(
+        query=query,
+        enable_cross_partition_query=True
+    ))
+    return items
+
 def getUser(username):
-    #initContainers()
+    # initContainers()
     container = getContainer(USERS_CONTAINER_ID)
     print(container)
     query = "SELECT * FROM UsersV1 u WHERE u.email = @email"
