@@ -17,6 +17,8 @@ import pandas as pd
 
 
 app = Flask(__name__)
+#context = ('server.crt', 'server.key')#certificate and key files
+#app.run(debug=True, ssl_context=context)
 
 
 
@@ -120,8 +122,9 @@ def signUp():
         return "FAILED"
         #Fails because user already exists
 
+
 @app.route('/signIn', methods=['GET','POST'])
-@cross_origin(supports_credentials=True, origin=['https://en.wikipedia.org/', 'https://127.0.0.1/', 'http://127.0.0.1/'])
+@cross_origin(supports_credentials=True, origin=['https://en.wikipedia.org/', 'https://127.0.0.1/', 'http://127.0.0.1:3000'])
 def signIn():
     print('signin')
     print(request.json)
