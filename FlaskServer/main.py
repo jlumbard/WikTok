@@ -21,7 +21,6 @@ app = Flask(__name__)
 #app.run(debug=True, ssl_context=context)
 
 
-
 app.config['SESSION_COOKIE_SAMESITE'] = "None"
 app.config['SESSION_COOKIE_SECURE'] = True
 CORS(app, supports_credentials=True)
@@ -180,3 +179,6 @@ def signUpPage():
 def test():
     print("test")
     return('test')
+
+if __name__ == '__main__':
+    app.run(ssl_context=('server.crt', 'server.key'), debug=True)
