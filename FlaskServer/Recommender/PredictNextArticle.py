@@ -6,8 +6,5 @@ import pandas as pd
 def predictNextArticlev1():
     #this just returns a random response
     res = requests.get('https://en.wikipedia.org/wiki/Special:Random')
-    items = getArticles()
+
     return res.url
-
-
-    

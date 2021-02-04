@@ -106,6 +106,7 @@ def returnWikipediaFirstParagraph(link):
     soup = BeautifulSoup(r.text, features="html5lib")
     allText=""
 
-    for textChunk in soup.select('.mw-parser-output p'):
+    for textChunk in soup.find('.mw-parser-output p'):
         allText = allText + " " + textChunk.text
+        break
     return allText
