@@ -111,6 +111,16 @@ def getArticles():
     ))
     return items
 
+def getArticlesV2():
+    container = getContainer(PAGES_CONTAINER_ID)
+    query = "SELECT DISTINCT us.title, us.firstParagraph FROM PagesV1 us"
+
+    items = list(container.query_items(
+        query=query,
+        enable_cross_partition_query=True
+    ))
+    return items
+
 def getUser(username):
     # initContainers()
     container = getContainer(USERS_CONTAINER_ID)
