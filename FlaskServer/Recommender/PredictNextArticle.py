@@ -47,14 +47,12 @@ def computeCosineSim():
 
 
 def predictNextArticlev1():
-<<<<<<< HEAD
     #this just returns a random response
-    res = requests.get('https://en.wikipedia.org/wiki/Special:Random')
+    # res = requests.get('https://en.wikipedia.org/wiki/Special:Random')
 
-    return res.url
-=======
+    # return res.url
 
-    titlesArray = ['Toronto_Raptors','Toronto_Maple_Leafs', 'Tyler,_the_Creator']
+    titlesArray = ['https://en.wikipedia.org/wiki/Toronto_Raptors','https://en.wikipedia.org/wiki/Toronto_Maple_Leafs', 'https://en.wikipedia.org/wiki/Tyler,_the_Creator','https://en.wikipedia.org/wiki/Barack_Obama']
     #input var title is array of "liked" titles that were inputted by the user through onboarding
     cosine_sim, metadata = computeCosineSim()
     similarArticles = []
@@ -81,9 +79,9 @@ def predictNextArticlev1():
         
         #iterate through the list of titles of articles and append wikipedia url
         for i in range (len(titleOfArticle)):
-            similarArticles.append('https://en.wikipedia.org/wiki/' + res[i])
+            similarArticles.append(res[i])
 
-    
+  
     print('THE LENGTH OF SIMILARARTICLES IS: ' + str(len(similarArticles)))
     print(similarArticles)
     index = random.randint(0,len(similarArticles)-1)
@@ -92,4 +90,3 @@ def predictNextArticlev1():
     #return the top 5 most similar articles
     print('THE URL IS: ' +similarArticles[index])
     return similarArticles[index]
->>>>>>> aa91dd48fba106a637adf4e5814a99ef4c2f505a
