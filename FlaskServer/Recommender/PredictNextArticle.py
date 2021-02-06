@@ -4,18 +4,37 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 import UtilityFunctions.CosmosDBUtilities as CosmosUtilities
+import numpy as np
+from scipy import stats
 
 #This will host a series of prediction algorithm candidates, one of which will be selected to be deployed to production
 
-# def predictNextArticlev1():
+def predictNextArticlev1():
 #     #this just returns a random response
-#     # res = requests.get('https://en.wikipedia.org/wiki/Special:Random')
-  
-#     items = CosmosUtilities.getArticlesV2()
-#     metadata = pd.DataFrame(items)
-#     print(metadata)
-#     # print(res.url)
-#     return res.url
+    res = requests.get('https://en.wikipedia.org/wiki/Special:Random')
+    pageMetrics = CosmosUtilities.getPageMetrics()
+    pageMetrics_data = pd.DataFrame(pageMetrics)
+    pageViews = pageMetrics_data['pageViews'].tolist()
+    pageViewsTrend = pageMetrics_data['pageViewTrend'].tolist()
+    pageViews_zscore = stats.zscore(pageViews)
+    pageViewsTrend_zscore = stats.zscore(pageViewsTrend)
+
+    pageMetrics_data['pageViews_zscore'] = pageViews_zscore
+    pageMetrics_data['pageViewsTrend_zscore'] = pageViewsTrend_zscore
+    pageMetrics_data['Adjusted_Page_Views_zscore'] = pageMetrics_data['pageViews_zscore'] * 0.75
+    pageMetrics_data['sumOfScores'] = pageMetrics_data['Adjusted_Page_Views_zscore'] + pageMetrics_data['pageViewsTrend_zscore']
+    pageMetrics_data = pageMetrics_data.sort_values(by=['sumOfScores'], ascending=False)
+    print(np.max(pageMetrics_data['Adjusted_Page_Views_zscore']))
+
+    similarArticles = pageMetrics_data.iloc[:3]['title'].values
+    print(similarArticles)
+
+    index = random.randint(0,len(similarArticles)-1)
+    print("THE INDEX IS: " + str(index))
+    
+    #return the top 5 most similar articles
+    print('THE URL IS: ' +similarArticles[index])
+    return similarArticles[index]
 
 def computeCosineSim():
 
@@ -42,11 +61,7 @@ def computeCosineSim():
 
     return cosine_sim, metadata
 
-
-
-
-
-def predictNextArticlev1():
+def predictNextArticlev2():
     #this just returns a random response
     # res = requests.get('https://en.wikipedia.org/wiki/Special:Random')
 

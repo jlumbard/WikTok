@@ -59,7 +59,7 @@ def addUser(email, password, fname, lname, level):
     container = getContainer(USERS_CONTAINER_ID)
     hashedPword = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     #The data array below will have to be formatted.
-    container.create_item(body={'email':email, 'password':hashedPword.decode('utf-8'), 'fname':fname, 'lname':lname, 'level':level, 'id':id})
+    container.create_item(body={'email':email, 'password':hashedPword.decode(), 'fname':fname, 'lname':lname, 'level':level, 'id':id})
 
 def addSessionCookie():
     id = str(uuid.uuid4())
@@ -115,6 +115,15 @@ def getArticlesV2():
     container = getContainer(PAGES_CONTAINER_ID)
     query = "SELECT DISTINCT us.title, us.firstParagraph FROM PagesV1 us"
 
+    items = list(container.query_items(
+        query=query,
+        enable_cross_partition_query=True
+    ))
+    return items
+
+def getPageMetrics():
+    container = getContainer(PAGES_CONTAINER_ID)
+    query = "SELECT us.title, us.pageViews, us.pageViewTrend FROM PagesV1 us"
     items = list(container.query_items(
         query=query,
         enable_cross_partition_query=True
