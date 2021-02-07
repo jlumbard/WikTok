@@ -34,7 +34,7 @@ def removeArticlesRead(similarArticles):
     
     return similarArticles
 
-def predictNextArticlev1():
+def predictNextArticlev2():
    
     # Normalizing data from pageViews and pageViewsTrend
     pageMetrics = CosmosUtilities.getPageMetrics() 
@@ -81,12 +81,12 @@ def computeCosineSim():
 
     return cosine_sim, metadata
 
-def predictNextArticlev2():
+def predictNextArticlev1():
     #this just returns a random response
     # res = requests.get('https://en.wikipedia.org/wiki/Special:Random')
 
     # return res.url
-
+  
     titlesArray = ['https://en.wikipedia.org/wiki/Toronto_Raptors','https://en.wikipedia.org/wiki/Toronto_Maple_Leafs', 'https://en.wikipedia.org/wiki/Tyler,_the_Creator','https://en.wikipedia.org/wiki/Barack_Obama']
     #input var title is array of "liked" titles that were inputted by the user through onboarding
     cosine_sim, metadata = computeCosineSim()
