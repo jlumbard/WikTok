@@ -8,6 +8,7 @@ import Recommender.PredictNextArticle as PredictNextArticle
 import UtilityFunctions.ArticleDataUtilities as ArticleDataUtilities
 from flask_cors import CORS, cross_origin
 import pandas as pd
+import random
 
 #TO RUN:
 #export FLASK_APP=main.py
@@ -179,6 +180,22 @@ def signUpPage():
 def test():
     print("test")
     return('test')
+
+@app.route('/getOnboardArticles', methods=['GET'])
+def getOnboardingArticles():
+    onboardingArticles = {'Sports': ['Toronto Raptors', 'National Basketball Association', "Larry O'Brien Trophy", 'Boston Celtics', 'Dallas Mavericks', 'Atlanta Hawks', 'List of National Basketball Association awards', 'Toronto Maple Leafs', 'National Hockey League', 'Edmonton Oilers', 'Boston Bruins'], 'Music': ['Nas', '2pac', 'Jay-z', 'Run-DMC', 'Tyler, the Creator', 'Drake', 'Beyoncé', 'Brockhampton', 'Kanye West', 'A Tribe Called Quest'], 'Entertainment': ['Fornite', 'PlayStation 5', 'Twitch gameplay', 'Call of Duty: Black Ops', 'Xbox Series X', 'Rocket League', 'League of Legends', 'Dumpling', 'Big Mac', 'Poutine', 'Hamburger', 'Hot dog', 'Pretzel', 'Gordon Ramsay', 'Fried dough'], 'News': ['Apple', 'Android', 'Cloud Computing', 'Microsoft', 'Amazon', 'Huawei', 'Facebook', 'Instagram', 'Sony', 'Toshiba', 'Donald Trump', 'Joe Biden', 'Barack Obama', 'Constitution of the United States', 'Democracy', 'Republican Party', 'Democratic Party']}
+    randomizedOnboardingArticles = onboardingArticles
+    #shuffle the list and grab a random 3 from each category
+    for articleCategory in onboardingArticles:
+        print(articleCategory)
+        random.shuffle(randomizedOnboardingArticles[articleCategory])
+        randomizedOnboardingArticles[articleCategory] = randomizedOnboardingArticles[articleCategory][:3]
+        newArticles=[]
+        for article in randomizedOnboardingArticles[articleCategory]:
+            newArticles.append('https://en.wikipedia.org/wiki/'+article.replace(" ","_"))
+        randomizedOnboardingArticles[articleCategory] = newArticles
+
+    return randomizedOnboardingArticles
 
 if __name__ == '__main__':
     app.run(ssl_context=('server.crt', 'server.key'), debug=True)

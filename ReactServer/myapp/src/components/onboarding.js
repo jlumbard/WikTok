@@ -5,8 +5,8 @@ import LogoImage from '../images/logo.png';
 
 
 var sectionStyle = {
-  width: "50vw",
-  height: "50vh",
+  width: "65vw",
+  height: "65vh",
   background: "rgba(0,0,0,0.5)",
   backdropFilter: "blur(10px)",
   display: 'flex',
@@ -48,19 +48,34 @@ var textStyleSmall = {
 
 }
 
-var ImageStyle = {
-  width: "50%",
+var belowTextStyles = {
+  color: "White",
+  fontFamily: "Open Sans",
+  margin: '10px',
+  textAlign: 'center'
 }
 
-export default class Home extends React.Component {
+var ImageStyle = {
+  maxWidth: "30%",
+}
+
+var iFrameStyles = {
+  width: "80%",
+  height: "70%",
+  margin: "10px"
+}
+
+export default class Onboarding extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: null
+      user: null,
+      articles: null
     }
   }
   componentDidMount() {
     this.getUserProfile()
+    this.getOnboardingArticles()
   }
   getUserProfile() {
     fetch("https://127.0.0.1:5000/getUser", {
@@ -94,13 +109,36 @@ export default class Home extends React.Component {
         }
       )
   }
+  getOnboardingArticles() {
+    console.log("Running get Onboarding")
+    fetch("https://127.0.0.1:5000/getOnboardArticles", {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => res.json())
+      .then(
+        (json) => {
+          console.log("got articles")
+          console.log(json)
+          this.setState({
+            articles: json
+          });
+        },
+        (error) => { console.log("error in onboarding") }
+      )
+  }
+
   componentDidUpdate(prevProps, prevState) {
     console.log("component did update.")
     console.log(this.props.text)
 
     if (this.state.loggedIn != true) {
       alert("successfully logged in. Redirecting.")
-      this.props.history.push('/logIn')
     }
   }
 
@@ -108,17 +146,36 @@ export default class Home extends React.Component {
   render() {
     //redirect if they're not signed in?
 
-    return (
-      <div style={sectionStyle}>
-        <img style={ImageStyle} src={LogoImage}></img>
-        <div style={formsStyle}>
-          <div style={eachFormsStyle}>
-            <iframe src = 'https://en.wikipedia.org/wiki/Toronto_Raptors'>
+    if (this.state.articles !== null) {
+      return (
+        <div style={sectionStyle}>
+          <img style={ImageStyle} src={LogoImage}></img>
 
-            </iframe>
+
+          <iframe style={iFrameStyles} src={this.state.articles['Sports'][0] + "?printable=yes"}>
+
+          </iframe>
+          <div style={belowTextStyles}>
+            Do you think you'd like this article?
+              </div>
+          <div style={{display:'inline'}}>
+            <div style={{display:'inline', margin:"10px"}}>&#128077;</div>
+            <div style={{display:'inline', margin:"10px"}}>&#128078;</div>
+          </div>
+
+        </div>
+      )
+    }
+    else {
+      return (
+        <div style={sectionStyle}>
+          <img style={ImageStyle} src={LogoImage}></img>
+          <div style={formsStyle}>
+            <div style={eachFormsStyle}>
+            </div>
           </div>
         </div>
-      </div>
-    )
+      )
+    }
   }
 }
