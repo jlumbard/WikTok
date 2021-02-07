@@ -14,7 +14,7 @@ def checkLoggedIn(userID = None, sessionID = None):
             sessionID = session['sessionID']
     #if userID matches the sessionID they passed then we're chilling
     sessionIDTest = CosmosUtilities.getUserIdBySessionKey(sessionID)
-    if(sessionIDTest['userID'] == False): #The above function returns false if the sessionID doesnt exist or is invalid
+    if(sessionIDTest == False): #The above function returns false if the sessionID doesnt exist or is invalid
         return False
     else:
         if(userID == sessionIDTest['userID']):

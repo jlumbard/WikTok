@@ -33,7 +33,7 @@ def initContainers():
     client = cosmos_client.CosmosClient(HOST, {'masterKey': MASTER_KEY}, user_agent="CosmosDBDotnetQuickstart", user_agent_overwrite=True)
     #db = client.create_database(id=DATABASE_ID)
     db = client.get_database_client(DATABASE_ID)
-    db.create_container(id=INTERACTIONS_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
+    # db.create_container(id=INTERACTIONS_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
     db.create_container(id=PAGES_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
     # db.create_container(id=USERS_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
     # db.create_container(id=USERSESSION_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
@@ -88,6 +88,8 @@ def getUserIdBySessionKey(ID):
     return items[0]
 
 def getArticleByTitle(title):
+    # initContainers()
+
     container = getContainer(PAGES_CONTAINER_ID)
     query = "SELECT * FROM PagesV1 us WHERE us.title = @UniqueID"
 
@@ -96,7 +98,9 @@ def getArticleByTitle(title):
         enable_cross_partition_query=True,
         parameters=[dict(name="@UniqueID", value=str(title))]
     ))
-    if(len(items) != 0):
+    print("ITEMS")
+    print(items)
+    if(len(items) == 0):
         return True
     else:
         return False

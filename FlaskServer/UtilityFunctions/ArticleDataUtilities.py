@@ -24,8 +24,7 @@ def returnDataOnArticle(articleLink):
     #https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/University_of_Regina/daily/2020101000/2020103000
     articleTitle = articleLink.split('/wiki/')[1]
     articleData = {}
-    articleData['firstParagraph'] = returnWikipediaFirstParagraph(articleLink)
-    articleData['title'] = articleTitle
+    articleData['firstParagraph'], articleData['title'] = returnWikipediaFirstParagraph(articleLink)
     articleData['pageViews'],articleData['pageViewTrend'], articleData['rankedKeywords'] = getMetrics(articleTitle)
     return articleData
 
@@ -78,10 +77,14 @@ def getViewNumberTrend(arrayOfValues):
     return regressResult.slope
 
 def pushDataOnArticle(articleLink):
-    articleDoesntExist = CosmosDBUtilities.getArticleByTitle(articleLink.split('/wiki/')[1].replace('_',' '))
+    print(articleLink)
+    articleData = returnDataOnArticle(articleLink)
+    articleDoesntExist = CosmosDBUtilities.getArticleByTitle(articleData['title']) #True if it doesn't exist 
     if(articleDoesntExist):
-        articleData = returnDataOnArticle(articleLink)
+        print("ARTICLE DIDN'T EXIST, PUSHING TO DB")
         CosmosDBUtilities.pushWikiPageData(articleData)
+    else:
+        print("ARTICLE EXISTED")
     #This doesn't have any error handling
 
 def getRankedKeywordsFromArticle(articleText):
@@ -99,14 +102,21 @@ def getRankedKeywordsFromArticle(articleText):
     else:
         return []
 
-
-
 def returnWikipediaFirstParagraph(link):
     r = requests.get(link)
     soup = BeautifulSoup(r.text, features="html5lib")
     allText=""
 
-    for textChunk in soup.find('.mw-parser-output p'):
+    for textChunk in soup.select('.mw-parser-output p'):
         allText = allText + " " + textChunk.text
-        break
-    return allText
+        if(not textChunk.text.isspace()):
+            break
+    canonicalTitle = soup.find('link', {'rel':'canonical'})['href']
+    return allText, canonicalTitle
+
+def WikipedidCanonicalTitle(link):
+    r = requests.get(link)
+    soup = BeautifulSoup(r.text, features="html5lib")
+    canonicalTitle = soup.find('link', {'rel':'canonical'})['href']
+    return canonicalTitle
+
