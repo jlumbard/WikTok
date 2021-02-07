@@ -34,7 +34,7 @@ def removeArticlesRead(similarArticles):
     
     return similarArticles
 
-def predictNextArticlev2():
+def getPopularityBasedRecs():
    
     # Normalizing data from pageViews and pageViewsTrend
     pageMetrics = CosmosUtilities.getPageMetrics() 
@@ -55,11 +55,11 @@ def predictNextArticlev2():
     # Removes articles that the user has already read
     modifiedSimilarArticles =  removeArticlesRead(similarArticles)
 
-    index = random.randint(0,len(modifiedSimilarArticles)-1)
-    print("THE INDEX IS: " + str(index))
-    print('THE URL IS: ' +modifiedSimilarArticles[index])
+    # index = random.randint(0,len(modifiedSimilarArticles)-1)
+    # print("THE INDEX IS: " + str(index))
+    # print('THE URL IS: ' +modifiedSimilarArticles[index])
    
-    return modifiedSimilarArticles[index]
+    return modifiedSimilarArticles
 
 def computeCosineSim():
 
@@ -83,13 +83,13 @@ def computeCosineSim():
 
     return cosine_sim, metadata
 
-def predictNextArticlev1():
+def getContentBasedRecs():
     #this just returns a random response
     # res = requests.get('https://en.wikipedia.org/wiki/Special:Random')
 
     # return res.url
   
-    titlesArray = ['https://en.wikipedia.org/wiki/Toronto_Raptors','https://en.wikipedia.org/wiki/Toronto_Maple_Leafs', 'https://en.wikipedia.org/wiki/Tyler,_the_Creator','https://en.wikipedia.org/wiki/Barack_Obama']
+    titlesArray = ['https://en.wikipedia.org/wiki/Toronto_Raptors','https://en.wikipedia.org/wiki/Toronto_Maple_Leafs', 'https://en.wikipedia.org/wiki/Tyler,_the_Creator']
     #input var title is array of "liked" titles that were inputted by the user through onboarding
     cosine_sim, metadata = computeCosineSim()
     similarArticles = []
@@ -123,14 +123,31 @@ def predictNextArticlev1():
 
     modifiedSimilarArticles =  removeArticlesRead(np.array(similarArticles))
 
-    # print("MODIFIED SIMILAR ARTICLES")
-    # print(modifiedSimilarArticles)
+    # # print("MODIFIED SIMILAR ARTICLES")
+    # # print(modifiedSimilarArticles)
 
-    print('THE LENGTH OF SIMILARARTICLES IS: ' + str(len(modifiedSimilarArticles)))
-    print(modifiedSimilarArticles)
-    index = random.randint(0,len(modifiedSimilarArticles)-1)
-    print("THE INDEX IS: " + str(index))
+    # print('THE LENGTH OF SIMILARARTICLES IS: ' + str(len(modifiedSimilarArticles)))
+    # print(modifiedSimilarArticles)
+    # index = random.randint(0,len(modifiedSimilarArticles)-1)
+    # print("THE INDEX IS: " + str(index))
     
-    #return the top 5 most similar articles
-    print('THE URL IS: ' +modifiedSimilarArticles[index])
-    return modifiedSimilarArticles[index]
+    # #return the top 5 most similar articles
+    # print('THE URL IS: ' +modifiedSimilarArticles[index])
+    return modifiedSimilarArticles
+
+def predictNextArticlev1():
+    contentBasedRecs = getContentBasedRecs()
+    popularityBasedRecs = getPopularityBasedRecs()
+
+    allInitialRecommendations = contentBasedRecs + popularityBasedRecs
+
+    print("THIS IS WHAT WE WANT TO SEE")
+    print(allInitialRecommendations)
+
+    index = random.randint(0,len(allInitialRecommendations)-1)
+    # print("THE INDEX IS: " + str(index))
+    
+    # #return the top 5 most similar articles
+    # print('THE URL IS: ' +modifiedSimilarArticles[index])
+
+    return allInitialRecommendations[index]
