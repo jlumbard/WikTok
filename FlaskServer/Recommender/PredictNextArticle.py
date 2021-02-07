@@ -47,8 +47,10 @@ def predictNextArticlev2():
     pageMetrics_data['sumOfScores'] = pageMetrics_data['Adjusted_Page_Views_zscore'] + pageMetrics_data['pageViewsTrend_zscore']
     print(np.max(pageMetrics_data['Adjusted_Page_Views_zscore']))
     
+    pageMetrics_data = pageMetrics_data.sort_values(by='sumOfScores', ascending=False)
+    # print(pageMetrics_data)
     # Returns the top 15 articles
-    similarArticles = pageMetrics_data.iloc[:15]['title'].values
+    similarArticles = pageMetrics_data.iloc[:3]['title'].values
 
     # Removes articles that the user has already read
     modifiedSimilarArticles =  removeArticlesRead(similarArticles)
@@ -116,11 +118,19 @@ def predictNextArticlev1():
         for i in range (len(titleOfArticle)):
             similarArticles.append(res[i])
 
-    print('THE LENGTH OF SIMILARARTICLES IS: ' + str(len(similarArticles)))
-    print(similarArticles)
-    index = random.randint(0,len(similarArticles)-1)
+    # print("SIMILAR ARTICLES")
+    # print(similarArticles)
+
+    modifiedSimilarArticles =  removeArticlesRead(np.array(similarArticles))
+
+    # print("MODIFIED SIMILAR ARTICLES")
+    # print(modifiedSimilarArticles)
+
+    print('THE LENGTH OF SIMILARARTICLES IS: ' + str(len(modifiedSimilarArticles)))
+    print(modifiedSimilarArticles)
+    index = random.randint(0,len(modifiedSimilarArticles)-1)
     print("THE INDEX IS: " + str(index))
     
     #return the top 5 most similar articles
-    print('THE URL IS: ' +similarArticles[index])
-    return similarArticles[index]
+    print('THE URL IS: ' +modifiedSimilarArticles[index])
+    return modifiedSimilarArticles[index]
