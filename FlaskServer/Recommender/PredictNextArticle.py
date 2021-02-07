@@ -1,44 +1,69 @@
 import requests
 import random
+import json
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 import UtilityFunctions.CosmosDBUtilities as CosmosUtilities
+from flask import session
+from Models.user import user
 import numpy as np
 from scipy import stats
 
 #This will host a series of prediction algorithm candidates, one of which will be selected to be deployed to production
 
+
+def removeArticlesRead(similarArticles):
+    
+    # Convert from numpy to list
+    similarArticles = similarArticles.tolist()
+    # Read and store userID and then query the interactions table based on that id to return articles read
+    userID = session['user']['id']
+    articlesReadJSON = CosmosUtilities.getArticlesRead(userID)
+    articlesRead = []
+
+    # Convert dictionary to array for articles
+    for article in articlesReadJSON:
+        nameOfArticle = article['article']
+        articlesRead.append(nameOfArticle)
+    
+    # Remove articles that the user has already read and return modified array of articles
+    for article in articlesRead:
+        if article in similarArticles:
+            similarArticles.remove(article)
+    
+    return similarArticles
+
 def predictNextArticlev1():
-#     #this just returns a random response
-    pageMetrics = CosmosUtilities.getPageMetrics()
+   
+    # Normalizing data from pageViews and pageViewsTrend
+    pageMetrics = CosmosUtilities.getPageMetrics() 
     pageMetrics_data = pd.DataFrame(pageMetrics)
     pageViews = pageMetrics_data['pageViews'].tolist()
     pageViewsTrend = pageMetrics_data['pageViewTrend'].tolist()
-
     pageMetrics_data['pageViews_zscore'] = stats.zscore(pageViews)
     pageMetrics_data['pageViewsTrend_zscore'] = stats.zscore(pageViewsTrend)
     pageMetrics_data['Adjusted_Page_Views_zscore'] = pageMetrics_data['pageViews_zscore'] * 0.75
     pageMetrics_data['sumOfScores'] = pageMetrics_data['Adjusted_Page_Views_zscore'] + pageMetrics_data['pageViewsTrend_zscore']
-    pageMetrics_data = pageMetrics_data.sort_values(by=['sumOfScores'], ascending=False)
     print(np.max(pageMetrics_data['Adjusted_Page_Views_zscore']))
+    
+    # Returns the top 15 articles
+    similarArticles = pageMetrics_data.iloc[:15]['title'].values
 
-    similarArticles = pageMetrics_data.iloc[:3]['title'].values
-    print(similarArticles)
+    # Removes articles that the user has already read
+    modifiedSimilarArticles =  removeArticlesRead(similarArticles)
 
-    index = random.randint(0,len(similarArticles)-1)
+    index = random.randint(0,len(modifiedSimilarArticles)-1)
     print("THE INDEX IS: " + str(index))
-    print('THE URL IS: ' +similarArticles[index])
-    return similarArticles[index]
+    print('THE URL IS: ' +modifiedSimilarArticles[index])
+   
+    return modifiedSimilarArticles[index]
 
 def computeCosineSim():
 
     items = CosmosUtilities.getArticlesV2()
     metadata = pd.DataFrame(items)
     
-    # Figure out API call to DB for dataset
-    #metadata = pd.read_csv("SampleWikiDB-v1.csv")
-
     #define a TF-IDF vectorizer object. remove all english stop words such as 'the', 'a'
     tfidf = TfidfVectorizer(stop_words='english')
 
@@ -91,7 +116,6 @@ def predictNextArticlev2():
         for i in range (len(titleOfArticle)):
             similarArticles.append(res[i])
 
-  
     print('THE LENGTH OF SIMILARARTICLES IS: ' + str(len(similarArticles)))
     print(similarArticles)
     index = random.randint(0,len(similarArticles)-1)
