@@ -1,44 +1,71 @@
 import requests
 import random
+import json
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 import UtilityFunctions.CosmosDBUtilities as CosmosUtilities
+from flask import session
+from Models.user import user
 import numpy as np
 from scipy import stats
 
 #This will host a series of prediction algorithm candidates, one of which will be selected to be deployed to production
 
-def predictNextArticlev1():
-#     #this just returns a random response
-    pageMetrics = CosmosUtilities.getPageMetrics()
+
+def removeArticlesRead(similarArticles):
+    
+    # Convert from numpy to list
+    similarArticles = similarArticles.tolist()
+    # Read and store userID and then query the interactions table based on that id to return articles read
+    userID = session['user']['id']
+    articlesReadJSON = CosmosUtilities.getArticlesRead(userID)
+    articlesRead = []
+
+    # Convert dictionary to array for articles
+    for article in articlesReadJSON:
+        nameOfArticle = article['article']
+        articlesRead.append(nameOfArticle)
+    
+    # Remove articles that the user has already read and return modified array of articles
+    for article in articlesRead:
+        if article in similarArticles:
+            similarArticles.remove(article)
+    
+    return similarArticles
+
+def getPopularityBasedRecs():
+   
+    # Normalizing data from pageViews and pageViewsTrend
+    pageMetrics = CosmosUtilities.getPageMetrics() 
     pageMetrics_data = pd.DataFrame(pageMetrics)
     pageViews = pageMetrics_data['pageViews'].tolist()
     pageViewsTrend = pageMetrics_data['pageViewTrend'].tolist()
-
     pageMetrics_data['pageViews_zscore'] = stats.zscore(pageViews)
     pageMetrics_data['pageViewsTrend_zscore'] = stats.zscore(pageViewsTrend)
     pageMetrics_data['Adjusted_Page_Views_zscore'] = pageMetrics_data['pageViews_zscore'] * 0.75
     pageMetrics_data['sumOfScores'] = pageMetrics_data['Adjusted_Page_Views_zscore'] + pageMetrics_data['pageViewsTrend_zscore']
-    pageMetrics_data = pageMetrics_data.sort_values(by=['sumOfScores'], ascending=False)
     print(np.max(pageMetrics_data['Adjusted_Page_Views_zscore']))
-
+    
+    pageMetrics_data = pageMetrics_data.sort_values(by='sumOfScores', ascending=False)
+    # print(pageMetrics_data)
+    # Returns the top 15 articles
     similarArticles = pageMetrics_data.iloc[:3]['title'].values
-    print(similarArticles)
 
-    index = random.randint(0,len(similarArticles)-1)
-    print("THE INDEX IS: " + str(index))
-    print('THE URL IS: ' +similarArticles[index])
-    return similarArticles[index]
+    # Removes articles that the user has already read
+    modifiedSimilarArticles =  removeArticlesRead(similarArticles)
+
+    # index = random.randint(0,len(modifiedSimilarArticles)-1)
+    # print("THE INDEX IS: " + str(index))
+    # print('THE URL IS: ' +modifiedSimilarArticles[index])
+   
+    return modifiedSimilarArticles
 
 def computeCosineSim():
 
     items = CosmosUtilities.getArticlesV2()
     metadata = pd.DataFrame(items)
     
-    # Figure out API call to DB for dataset
-    #metadata = pd.read_csv("SampleWikiDB-v1.csv")
-
     #define a TF-IDF vectorizer object. remove all english stop words such as 'the', 'a'
     tfidf = TfidfVectorizer(stop_words='english')
 
@@ -56,13 +83,13 @@ def computeCosineSim():
 
     return cosine_sim, metadata
 
-def predictNextArticlev2():
+def getContentBasedRecs():
     #this just returns a random response
     # res = requests.get('https://en.wikipedia.org/wiki/Special:Random')
 
     # return res.url
-
-    titlesArray = ['https://en.wikipedia.org/wiki/Toronto_Raptors','https://en.wikipedia.org/wiki/Toronto_Maple_Leafs', 'https://en.wikipedia.org/wiki/Tyler,_the_Creator','https://en.wikipedia.org/wiki/Barack_Obama']
+  
+    titlesArray = ['https://en.wikipedia.org/wiki/Toronto_Raptors','https://en.wikipedia.org/wiki/Toronto_Maple_Leafs', 'https://en.wikipedia.org/wiki/Tyler,_the_Creator']
     #input var title is array of "liked" titles that were inputted by the user through onboarding
     cosine_sim, metadata = computeCosineSim()
     similarArticles = []
@@ -91,12 +118,36 @@ def predictNextArticlev2():
         for i in range (len(titleOfArticle)):
             similarArticles.append(res[i])
 
-  
-    print('THE LENGTH OF SIMILARARTICLES IS: ' + str(len(similarArticles)))
-    print(similarArticles)
-    index = random.randint(0,len(similarArticles)-1)
-    print("THE INDEX IS: " + str(index))
+    # print("SIMILAR ARTICLES")
+    # print(similarArticles)
+
+    modifiedSimilarArticles =  removeArticlesRead(np.array(similarArticles))
+
+    # # print("MODIFIED SIMILAR ARTICLES")
+    # # print(modifiedSimilarArticles)
+
+    # print('THE LENGTH OF SIMILARARTICLES IS: ' + str(len(modifiedSimilarArticles)))
+    # print(modifiedSimilarArticles)
+    # index = random.randint(0,len(modifiedSimilarArticles)-1)
+    # print("THE INDEX IS: " + str(index))
     
-    #return the top 5 most similar articles
-    print('THE URL IS: ' +similarArticles[index])
-    return similarArticles[index]
+    # #return the top 5 most similar articles
+    # print('THE URL IS: ' +modifiedSimilarArticles[index])
+    return modifiedSimilarArticles
+
+def predictNextArticlev1():
+    contentBasedRecs = getContentBasedRecs()
+    popularityBasedRecs = getPopularityBasedRecs()
+
+    allInitialRecommendations = contentBasedRecs + popularityBasedRecs
+
+    print("THIS IS WHAT WE WANT TO SEE")
+    print(allInitialRecommendations)
+
+    index = random.randint(0,len(allInitialRecommendations)-1)
+    # print("THE INDEX IS: " + str(index))
+    
+    # #return the top 5 most similar articles
+    # print('THE URL IS: ' +modifiedSimilarArticles[index])
+
+    return allInitialRecommendations[index]

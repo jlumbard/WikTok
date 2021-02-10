@@ -160,6 +160,16 @@ def getUserByID(ID):
     ))
     return items[0] if 0 < len(items) else None
 
+def getArticlesRead(ID):
+    container = getContainer(INTERACTIONS_CONTAINER_ID)
+    query = "SELECT DISTINCT u.article FROM InteractionsV1 u WHERE u.user=@ID"
+    items = list(container.query_items(
+        query=query,
+        enable_cross_partition_query=True,
+        parameters=[dict(name="@ID", value=ID)]
+    ))
+    return items
+
 
 def checkUser(email, pword):
     trackResult = getUser(email)

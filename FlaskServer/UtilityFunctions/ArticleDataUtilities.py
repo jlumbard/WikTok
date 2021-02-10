@@ -90,7 +90,7 @@ def pushDataOnArticle(articleLink):
 def getRankedKeywordsFromArticle(articleText):
     #articleText will be the whole html
     #nltk.download()
-    soup = BeautifulSoup(articleText.text, features="html5lib")
+    soup = BeautifulSoup(articleText.text, features="xml")
     ps = soup.select("p")
     intro = '\n'.join([ para.text for para in ps])
     rake = Rake()
@@ -104,7 +104,7 @@ def getRankedKeywordsFromArticle(articleText):
 
 def returnWikipediaFirstParagraph(link):
     r = requests.get(link)
-    soup = BeautifulSoup(r.text, features="html5lib")
+    soup = BeautifulSoup(r.text, features="xml")
     allText=""
 
     for textChunk in soup.select('.mw-parser-output p'):
@@ -116,7 +116,7 @@ def returnWikipediaFirstParagraph(link):
 
 def WikipedidCanonicalTitle(link):
     r = requests.get(link)
-    soup = BeautifulSoup(r.text, features="html5lib")
+    soup = BeautifulSoup(r.text, features="xml")
     canonicalTitle = soup.find('link', {'rel':'canonical'})['href']
     return canonicalTitle
 
