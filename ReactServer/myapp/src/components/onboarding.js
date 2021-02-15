@@ -230,14 +230,19 @@ export default class Onboarding extends React.Component {
     var tempArticles = this.state.articles
     console.log(this.state.articles)
     console.log(Object.prototype.toString.call(this.state.articles))
+
+    if(this.state.articles.length == 0){//Then they've gone through everything
+      console.log("List is empty")
+    }
+
     //Loop through categories, I.E. news, sports. 
     for (const category in tempArticles){
-      console.log(tempArticles[category])
+
       for (const article of tempArticles[category]){
-        console.log(article)
+
         //If article has been checked, discard it. Its been pushed onto the ratings array if they liked it!
         if(nextArticle === true){
-          console.log("changing article.")
+
           if((this.state.likedArticles.indexOf(article) == -1) && (this.state.dislikedArticles.indexOf(article) == -1)){
             document.querySelector('iframe').src = article + "?printable=yes"
             nextArticle = false;
@@ -245,7 +250,9 @@ export default class Onboarding extends React.Component {
           //Set the iframe (the wikipedia subpage) to the next article
           //And turn this off so It doens't also set the next article
         }
-        if(article === lastLink.replace("?printable=yes","")){
+        // console.log(article);
+        // console.log(lastLink.replace("?printable=yes",""));
+        if(encodeURI(article) === lastLink.replace("?printable=yes","")){
           nextArticle = true
           //Set this true so the next loop knows to push this. 
         }
@@ -254,6 +261,10 @@ export default class Onboarding extends React.Component {
         //Remove articleType from list if it doesn't exist. 
         tempArticles.splice(tempArticles.indexOf(category))
       }
+    }
+    if(nextArticle === true){
+      console.log("GOT TO END OF LIST")
+      document.getElementsByClassName("skipButton")[0].innerText = "Finish";
     }
   }
 
