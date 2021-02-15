@@ -3,6 +3,14 @@ import { Text } from '@fluentui/react';
 import { Link } from 'react-router-dom'
 import LogoImage from '../images/logo.png';
 
+var outerContainerStyle = {
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+}
 
 var sectionStyle = {
   width: "65vw",
@@ -12,7 +20,8 @@ var sectionStyle = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  justifyContent: 'center'
+  justifyContent: 'center',
+  marginBottom:"auto",
 };
 
 var formsStyle = {
@@ -27,6 +36,23 @@ var eachFormsStyle = {
   margin: "10px",
   color: "white"
 }
+var skipButtonStyles = {
+  padding: "10px",
+  background: "rgba(0, 0, 0, 0.5)",
+  backdropFilter: "blur(10px)",
+  color: "white",
+  cursor: "pointer",
+  marginBottom:"auto",
+}
+
+var topHeaderStyles = {
+  marginBottom: "auto",
+  width:"100%",
+  display:"flex",
+  flexDirection:"row",
+  justifyContent:"flex-end",
+}
+
 var textStyle = {
 
   textAlign: "center",
@@ -60,6 +86,7 @@ var ImageStyle = {
 }
 
 var iFrameStyles = {
+  marginBottom:"auto",
   width: "80%",
   height: "70%",
   margin: "10px"
@@ -77,6 +104,7 @@ export default class Onboarding extends React.Component {
     this.likeButtonClicked = this.likeButtonClicked.bind(this);
     this.transitionNextArticle = this.transitionNextArticle.bind(this);
     this.disLikeButtonClicked = this.disLikeButtonClicked.bind(this);
+    this.pushOnboardingArticles = this.pushOnboardingArticles.bind(this);
     console.log("Set state")
   }
   componentDidMount() {
@@ -102,12 +130,19 @@ export default class Onboarding extends React.Component {
             isLoaded: true,
             user: json
           });
+          if(this.state.user == false){
+            this.props.history.push('/')
+          }
+          else if(this.state.user.Onboarded == true){
+            this.props.history.push('/')
+          }
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (error) => {
           console.log("error")
+          this.props.history.push('/')
           // this.setState({
           //   isLoaded: true,
           //   error
@@ -139,13 +174,41 @@ export default class Onboarding extends React.Component {
       )
   }
 
+  pushOnboardingArticles() {
+    console.log("Running post Onboarding")
+    fetch("https://127.0.0.1:5000/pushOnboardArticles", {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body:JSON.stringify(this.state.likedArticles)
+    })
+      .then(res => res.json())
+      .then(
+        (json) => {
+          console.log("got articles")
+          console.log(json)
+          //someday this should redirect to a wikipedia page, or a better home page
+          this.props.history.push('/')
+        },
+        (error) => { console.log("error in onboarding") }
+      )
+
+    //Also need to update user to mark them as onboarded, this happens in the above API call
+
+
+  }
+
   componentDidUpdate(prevProps, prevState) {
     console.log("component did update.")
-    console.log(this.props.text)
 
-    if (this.state.loggedIn != true) {
-      alert("successfully logged in. Redirecting.")
-    }
+
+    // if (this.state.loggedIn != true) {
+    //   this.props.history.push('/')
+    // }
   }
 
   likeButtonClicked(event) {
@@ -201,6 +264,11 @@ export default class Onboarding extends React.Component {
 
     if (this.state.articles !== null) {
       return (
+        <div className="testClass" style={outerContainerStyle}>
+          <div className="topHeader" style={topHeaderStyles}>
+            <div onClick = {this.pushOnboardingArticles} className="skipButton" style={skipButtonStyles}>Skip</div>
+
+          </div>
         <div style={sectionStyle}>
           <img style={ImageStyle} src={LogoImage}></img>
 
@@ -216,6 +284,7 @@ export default class Onboarding extends React.Component {
             <div onClick={this.disLikeButtonClicked} style={{display:'inline', margin:"10px", cursor:"pointer"}}>&#128078;</div>
           </div>
 
+        </div>
         </div>
       )
     }
