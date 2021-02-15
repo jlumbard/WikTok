@@ -70,8 +70,14 @@ export default class Onboarding extends React.Component {
     super(props);
     this.state = {
       user: null,
-      articles: null
+      articles: null,
+      likedArticles: [],
+      dislikedArticles:[],
     }
+    this.likeButtonClicked = this.likeButtonClicked.bind(this);
+    this.transitionNextArticle = this.transitionNextArticle.bind(this);
+    this.disLikeButtonClicked = this.disLikeButtonClicked.bind(this);
+    console.log("Set state")
   }
   componentDidMount() {
     this.getUserProfile()
@@ -142,6 +148,53 @@ export default class Onboarding extends React.Component {
     }
   }
 
+  likeButtonClicked(event) {
+      var currentLink = document.querySelector('iframe').src
+      this.state.likedArticles.push(currentLink)
+      this.transitionNextArticle(currentLink)
+  }
+  disLikeButtonClicked(event) {
+    var currentLink = document.querySelector('iframe').src
+    console.log("disLikeButton")
+    this.state.dislikedArticles.push(currentLink)
+    this.transitionNextArticle(currentLink)
+}
+
+  transitionNextArticle(lastLink){
+    //remove last article
+    //This is the dummy variable that lets us know if the next article is the one to switch to while still being O(n)
+    var nextArticle = false
+    var tempArticles = this.state.articles
+    console.log(this.state.articles)
+    console.log(Object.prototype.toString.call(this.state.articles))
+    //Loop through categories, I.E. news, sports. 
+    for (const category in tempArticles){
+      console.log(tempArticles[category])
+      for (const article of tempArticles[category]){
+        console.log(article)
+        //If article has been checked, discard it. Its been pushed onto the ratings array if they liked it!
+        if(nextArticle === true){
+          console.log("changing article.")
+          if((this.state.likedArticles.indexOf(article) == -1) && (this.state.dislikedArticles.indexOf(article) == -1)){
+            document.querySelector('iframe').src = article + "?printable=yes"
+            nextArticle = false;
+          }
+          //Set the iframe (the wikipedia subpage) to the next article
+          //And turn this off so It doens't also set the next article
+        }
+        if(article === lastLink.replace("?printable=yes","")){
+          nextArticle = true
+          //Set this true so the next loop knows to push this. 
+        }
+      }
+      if(category === undefined || category.length == 0){
+        //Remove articleType from list if it doesn't exist. 
+        tempArticles.splice(tempArticles.indexOf(category))
+      }
+    }
+  }
+
+
 
   render() {
     //redirect if they're not signed in?
@@ -152,15 +205,15 @@ export default class Onboarding extends React.Component {
           <img style={ImageStyle} src={LogoImage}></img>
 
 
-          <iframe style={iFrameStyles} src={this.state.articles['Sports'][0] + "?printable=yes"}>
+          <iframe style={iFrameStyles} src={this.state.articles[Object.keys(this.state.articles)[0]][0] + "?printable=yes"}>
 
           </iframe>
           <div style={belowTextStyles}>
             Do you think you'd like this article?
               </div>
           <div style={{display:'inline'}}>
-            <div style={{display:'inline', margin:"10px"}}>&#128077;</div>
-            <div style={{display:'inline', margin:"10px"}}>&#128078;</div>
+            <div onClick={this.likeButtonClicked} style={{display:'inline', margin:"10px", cursor:"pointer"}}>&#128077;</div>
+            <div onClick={this.disLikeButtonClicked} style={{display:'inline', margin:"10px", cursor:"pointer"}}>&#128078;</div>
           </div>
 
         </div>
