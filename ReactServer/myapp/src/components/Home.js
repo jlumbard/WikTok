@@ -1,32 +1,9 @@
 import React from 'react';
-import { Text } from '@fluentui/react';
 import { Link } from 'react-router-dom'
-import LogoImage from '../images/logo.png';
+import logo from '../images/logo.png';
+import styled from 'styled-components';
 
 
-var sectionStyle = {
-  width: "50vw",
-  height: "50vh",
-  background: "rgba(0,0,0,0.5)",
-  backdropFilter: "blur(10px)",
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center'
-};
-
-var formsStyle = {
-  minHeight: '50%',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'space-between'
-};
-
-var eachFormsStyle = {
-  margin: "10px",
-  color: "white"
-}
 var textStyle = {
 
   textAlign:"center",
@@ -100,45 +77,77 @@ export default class Home extends React.Component {
     if (this.state.user != null) {
 
       return (
-        <div style={sectionStyle}>
-          <img style={ImageStyle} src ={LogoImage}></img>
-          <div style={formsStyle}>
-            <div style={eachFormsStyle}>
-              <p style={textStyle}>
-                Home
-          </p>
-    
-        <p style={textStyleSmall}>
-        Welcome, {this.state.user.fname} !
-          </p>
+        <Container>
+          <LogoWrapper>
+            <img src={logo} alt="" />
+          </LogoWrapper>
+          <h1>
+            Home
+          </h1>
 
-            </div>
-          </div>
-        </div>
+          <h4 >
+            Welcome, {this.state.user.fname}!
+          </h4>
+
+        </Container>
       );
     }
     else {
 
       return (
-        <div style={sectionStyle}>
-          <div style={formsStyle}>
-            <div style={eachFormsStyle}>
-            <p style={textStyle}>
-                Home
-          </p>
+        <Container>
+        <LogoWrapper>
+          <img src={logo} alt="" />
+        </LogoWrapper>
 
-          <p style={textStyleSmall}>
-                
+          <h4>    
                 You're not logged in. 
-                <Link style={{color:"white"}} to="/signIn"> Sign in Here</Link>
+                
+            </h4>
+            <Link style={{fontSize:"13px"}} to="/signIn"> Sign in here.</Link>
 
-              </p>
-
-
-            </div>
-          </div>
-        </div>
+            
+        </Container>
       );
     }
   }
 }
+
+
+const Container = styled.div`
+  min-width: 100%;
+
+  background-color: rgba(255, 255, 255, 0.8);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 2rem;
+
+  h4 {
+    color: #808080;
+    font-weight: bold;
+    font-size: 13px;
+    margin-top: 2rem;
+    span {
+      color: #ff8d8d;
+      cursor: pointer;
+    }
+  }
+  text {
+    font-size: 13px;
+    
+  }
+`;
+
+const LogoWrapper = styled.div`
+  img {
+    height: 6rem;
+  }
+  span {
+    color: #5dc399;
+    font-weight: 300;
+    font-size: 18px;
+  }
+`;

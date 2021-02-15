@@ -1,5 +1,4 @@
 {
-    "python.pythonPath": "C:\\Users\\Kevin\\AppData\\Local\\Programs\\Python\\Python38\\python.exe",
     "python.autoComplete.extraPaths": [
         "/Library/Frameworks/Python.framework/Versions/3.8/bin/python3",
     ],
@@ -36,4 +35,7 @@
     ],
     "appService.defaultWebAppToDeploy": "/subscriptions/e82cf62f-2188-4c5f-bcc0-91d83b350f92/resourceGroups/WikTok/providers/Microsoft.Web/sites/WikTokv1",
     "appService.deploySubpath": ".",
+    "python.analysis.extraPaths": [
+        "/Library/Frameworks/Python.framework/Versions/3.8/bin/python3"
+    ],
 }

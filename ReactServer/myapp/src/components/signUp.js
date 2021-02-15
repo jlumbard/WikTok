@@ -1,39 +1,8 @@
 import React from 'react';
-import { Text, TextField, DefaultButton } from '@fluentui/react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import logo from '../images/logo.png';
 
-
-var sectionStyle = {
-  width: "50vw",
-  height: "50vh",
-  background: "rgba(0,0,0,0.5)",
-  backdropFilter: "blur(10px)",
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center'
-};
-
-var formsStyle = {
-  minHeight: '50%',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'space-between'
-};
-
-var eachFormsStyle = {
-  margin: "10px",
-  color: "white"
-}
-
-const overrideButtonStyles = {
-  wrapper: {
-    label: {
-      color: "white"
-    }
-
-  },
-};
 
 
 
@@ -92,31 +61,118 @@ export default class SignUp extends React.Component {
   render() {
 
     return (
-      <div style={sectionStyle}>
-        <div style={formsStyle}>
-          <div style={eachFormsStyle}>
-            <Text styles={{ fontSize: "36px" }} variant={'mega'} block>
-              Sign Up
-        </Text>
+      <Container>
 
-          </div>
-          <div style={eachFormsStyle}>
-            <TextField ref={(ref) => { this.email = ref }} styles={overrideButtonStyles} label="Username" />
-          </div>
-          <div style={eachFormsStyle}>
-            <TextField ref={(ref) => { this.pword = ref }} styles={overrideButtonStyles} label="Password" />
-          </div>
-          <div style={eachFormsStyle}>
-            <TextField ref={(ref) => { this.fname = ref }} styles={overrideButtonStyles} label="First Name" />
-          </div>
-          <div style={eachFormsStyle}>
-            <TextField ref={(ref) => { this.lname = ref }} styles={overrideButtonStyles} label="Last Name" />
-          </div>
-          <div style={eachFormsStyle}>
-            <DefaultButton styles={overrideButtonStyles} text="Sign Up" onClick={this.handleSubmit} allowDisabledFocus />
-          </div>
-        </div>
-      </div>
+        <LogoWrapper>
+          <img src={logo} alt="" />
+        </LogoWrapper>
+        
+
+        <Form>
+
+        <StyledInput required placeholder="Email" ref={(ref) => { this.email = ref }} label="Username" />
+
+
+        <StyledInput required placeholder="Password" ref={(ref) => { this.pword = ref }} label="Password" />
+
+
+        <StyledInput required placeholder="First Name" ref={(ref) => { this.fname = ref }} label="First Name" />
+
+
+        <StyledInput required placeholder="Last Name" ref={(ref) => { this.lname = ref }} label="Last Name" />
+
+
+        <button text="Sign Up" onClick={this.handleSubmit}>Sign Up</button>
+        </Form>
+        <label>Already have an account?</label>
+        <Link style={{fontSize:"13px"}} to="/signIn"> Log in here.</Link>
+      </Container>
     );
   }
 }
+
+
+const Form = styled.form`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  h3 {
+    color: #666666;
+    margin-bottom: 2rem;
+  }
+  button {
+    width: 75%;
+    max-width: 350px;
+    min-width: 250px;
+    height: 40px;
+    border: none;
+    margin: 1rem 0;
+    box-shadow: 0px 14px 9px -15px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    background-color: #70edb9;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in;
+    &:hover {
+      transform: translateY(-3px);
+    }
+  }
+`;
+
+const Container = styled.div`
+  min-width: 100%;
+
+  background-color: rgba(255, 255, 255, 0.8);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 2rem;
+
+  h4 {
+    color: #808080;
+    font-weight: bold;
+    font-size: 13px;
+    margin-top: 2rem;
+    span {
+      color: #ff8d8d;
+      cursor: pointer;
+    }
+
+  }
+  text {
+    font-size: 13px;
+    
+  }
+`;
+
+const StyledInput = styled.input`
+  width: 80%;
+  max-width: 350px;
+  min-width: 250px;
+  height: 40px;
+  border: none;
+  margin: 0.5rem 0;
+  background-color: #f5f5f5;
+  box-shadow: 0px 14px 9px -15px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  padding: 0 1rem;
+  transition: all 0.2s ease-in;
+  &:hover {
+    transform: translateY(-3px);
+  }
+`;
+
+const LogoWrapper = styled.div`
+  img {
+    height: 6rem;
+  }
+  span {
+    color: #5dc399;
+    font-weight: 300;
+    font-size: 18px;
+  }
+`;
