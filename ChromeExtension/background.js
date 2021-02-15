@@ -22,42 +22,49 @@ chrome.runtime.onInstalled.addListener(function () {
 });
 
 function shootRequestIfURL(details) {
+  console.log(details.url)
   if (/^[^:/]+:\/\/[^/]*en.wikipedia\.[^/.]+\//.test(details.url)) {
+    console.log("Marked as a wiki uRL.")
     chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
       let currentURL = tabs[0].url;
       console.log(currentURL)
       console.log(details);
-      if (chrome.storage) {
-        chrome.storage.sync.get(['articleLiked'], function (obj) {
-          chrome.storage.sync.get(['timeLoaded'], function (timeObj) {
-            fetch('https://127.0.0.1:5000/pushUserInteractionData', {
-              method: 'POST',
-              credentials: 'include',
-              crossDomain: true,
-              headers: {
-                'Accept': 'text/html',
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                timeSpent: timeObj['timeLoaded'] - Date.now(),
-                liked: obj['articleLiked'],
-                article : currentURL
+      //This ensures that the tab navigated FROM was a wiki link. It is probs more important than 
+      //the one you navigate TO being a wiki link, IMO. THis is all more an art than a science though.
+      if (/^[^:/]+:\/\/[^/]*en.wikipedia\.[^/.]+\//.test(currentURL)) {//THen both navigate to and from are wiki articles.
+        console.log("Marked as a wiki uRL (2)")
+        if (chrome.storage) {
+          chrome.storage.sync.get(['articleLiked'], function (obj) {
+            chrome.storage.sync.get(['timeLoaded'], function (timeObj) {
+              fetch('https://127.0.0.1:5000/pushUserInteractionData', {
+                method: 'POST',
+                credentials: 'include',
+                crossDomain: true,
+                headers: {
+                  'Accept': 'text/html',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  timeSpent: timeObj['timeLoaded'] - Date.now(),
+                  liked: obj['articleLiked'],
+                  article: currentURL
+                })
               })
-            })
 
-              .then(response => response.text())
-              .then(data => {
-                console.log("test")
-                console.log(data)
-              })
+                .then(response => response.text())
+                .then(data => {
+                  console.log("test")
+                  console.log(data)
+                })
+            });
           });
-        });
-        chrome.storage.sync.set({ articleLiked: false }, function () {
-          console.log("articleLikedFalse");
-        });
-        chrome.storage.sync.set({ timeLoaded: Date.now() }, function () {
-          console.log("resetTime")
-         });
+          chrome.storage.sync.set({ articleLiked: false }, function () {
+            console.log("articleLikedFalse");
+          });
+          chrome.storage.sync.set({ timeLoaded: Date.now() }, function () {
+            console.log("resetTime")
+          });
+        }
       }
     });
   }

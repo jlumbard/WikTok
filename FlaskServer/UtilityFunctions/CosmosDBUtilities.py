@@ -87,6 +87,43 @@ def getUserIdBySessionKey(ID):
         return False
     return items[0]
 
+def markUserOnboarded(ID):
+    container = getContainer(USERS_CONTAINER_ID)
+    
+    query = "SELECT * FROM UsersV1 us WHERE us.id = @UniqueID"
+
+    items = list(container.query_items(
+        query=query,
+        enable_cross_partition_query=True,
+        parameters=[dict(name="@UniqueID", value=str(ID))]
+    ))
+    updatedItem = items[0]
+    updatedItem['Onboarded'] = True
+    container.upsert_item(updatedItem)
+
+def pushOnboardedArticles(articleTitle, userID):
+    dataArray = {}
+    dataArray['article'] = articleTitle
+    dataArray['Onboarding'] = True
+    dataArray['id']=str(uuid.uuid4())
+    dataArray['userID']= userID
+    container = getContainer(INTERACTIONS_CONTAINER_ID)
+    #The data array below will have to be formatted.
+    print(dataArray)
+    container.create_item(body=dataArray)
+
+def getUsersOnboardedArticles(userID):
+    container = getContainer(INTERACTIONS_CONTAINER_ID)
+    
+    query = "SELECT * FROM InteractionsV1 i WHERE i.userID = @UniqueID"
+
+    items = list(container.query_items(
+        query=query,
+        enable_cross_partition_query=True,
+        parameters=[dict(name="@UniqueID", value=str(userID))]
+    ))
+    return items
+
 def getArticleByTitle(title):
     # initContainers()
 
@@ -169,7 +206,6 @@ def getArticlesRead(ID):
         parameters=[dict(name="@ID", value=ID)]
     ))
     return items
-
 
 def checkUser(email, pword):
     trackResult = getUser(email)
