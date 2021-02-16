@@ -73,7 +73,7 @@ export default class SignUp extends React.Component {
         <StyledInput required placeholder="Email" ref={(ref) => { this.email = ref }} label="Username" />
 
 
-        <StyledInput required placeholder="Password" ref={(ref) => { this.pword = ref }} label="Password" />
+        <StyledInput type="password" required placeholder="Password" ref={(ref) => { this.pword = ref }} label="Password" />
 
 
         <StyledInput required placeholder="First Name" ref={(ref) => { this.fname = ref }} label="First Name" />
