@@ -23,10 +23,7 @@ export default class SignIn extends React.Component {
     }
   }
 
-
-
   // I feel like this is where we need to put logic for validating inputs
-
   onSubmit() {
     alert('button clicked')
     fetch("https://127.0.0.1:5000/signIn", {
