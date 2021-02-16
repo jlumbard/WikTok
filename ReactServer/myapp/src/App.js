@@ -8,6 +8,7 @@ import SignIn from './components/signIn';
 import SignUp from './components/signUp';
 import Home from './components/Home';
 import Onboarding from './components/onboarding';
+import manageAccount from './components/manageAccount'
 
 function App() {
   return (<Background>
@@ -18,6 +19,8 @@ function App() {
         <Route path="/signUp" component={SignUp}>
         </Route>
         <Route path="/Onboarding" component={Onboarding}>
+        </Route>
+        <Route path="/manageAccount" component={manageAccount}>
         </Route>
         <Route path="/" component={Home}>
         </Route>
