@@ -33,7 +33,7 @@ var ImageStyle = {
   width: "50%",
 }
 
-export default class Home extends React.Component {
+export default class CEMainPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,6 +42,9 @@ export default class Home extends React.Component {
   }
   componentDidMount() {
     this.getUserProfile()
+  }
+  pushToHomePage(){
+    this.props.history.push('/LogIn')
   }
   getUserProfile() {
     fetch("https://127.0.0.1:5000/getUser", {
@@ -80,7 +83,7 @@ export default class Home extends React.Component {
   render() {
     if (this.state.user != null) {
 
-      return (
+      return (//This should be the informational area, it should have statistics about what the user is currently doing 
         <Container>
           <LogoWrapper>
             <img src={logo} alt="" />
@@ -100,20 +103,19 @@ export default class Home extends React.Component {
       );
     }
     else {
-
       return (
         <Container>
         <LogoWrapper>
           <img src={logo} alt="" />
         </LogoWrapper>
-
-          <h4>    
+        <h4>    
                 You're not logged in. 
-                
-            </h4>
-            <Link style={{fontSize:"13px"}} to="/signIn"> Sign in here.</Link>
+        </h4>
 
-            
+        <Form>
+        <button text="Log In" onClick={this.pushToHomePage}>Log In</button>
+        </Form>
+
         </Container>
       );
     }
@@ -130,7 +132,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0 2rem;
+
 
   h4 {
     color: #808080;
@@ -148,9 +150,38 @@ const Container = styled.div`
   }
 `;
 
+const Form = styled.form`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  h3 {
+    color: #666666;
+    margin-bottom: 2rem;
+  }
+  button {
+    width: 75%;
+    max-width: 350px;
+    min-width: 250px;
+    height: 40px;
+    border: none;
+    margin: 1rem 0;
+    box-shadow: 0px 14px 9px -15px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    background-color: #70edb9;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in;
+    &:hover {
+      transform: translateY(-3px);
+    }
+  }
+`;
+
 const LogoWrapper = styled.div`
   img {
-    height: 6rem;
+    height: 4rem;
   }
   span {
     color: #5dc399;

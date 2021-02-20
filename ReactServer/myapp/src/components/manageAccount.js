@@ -33,7 +33,7 @@ var ImageStyle = {
   width: "50%",
 }
 
-export default class Home extends React.Component {
+export default class manageAccount extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -85,21 +85,12 @@ export default class Home extends React.Component {
           <LogoWrapper>
             <img src={logo} alt="" />
           </LogoWrapper>
-          <h1>
-            Home
-          </h1>
-
-          <h4 >
-            Welcome, {this.state.user.fname}!
-          </h4>
-          <h4 style={{marginTop:"1rem"}}>
-            <a style = {linkStyle} href="/accountPage">Manage your account</a>, <a style = {linkStyle} href="/logOut">log out</a>, or view a <a style = {linkStyle} href="https://en.wikipedia.org/wiki/Special:Random">random Wikipedia Article!</a>
-          </h4>
+          <h2>Change your password, download your data, or delete your account.</h2>
 
         </Container>
       );
     }
-    else {
+    else {//This should never happen
 
       return (
         <Container>

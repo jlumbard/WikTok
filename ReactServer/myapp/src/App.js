@@ -8,6 +8,8 @@ import SignIn from './components/signIn';
 import SignUp from './components/signUp';
 import Home from './components/Home';
 import Onboarding from './components/onboarding';
+import manageAccount from './components/manageAccount';
+import CEMainPage from './components/CEMainPage';
 
 function App() {
   return (<Background>
@@ -17,7 +19,11 @@ function App() {
         </Route>
         <Route path="/signUp" component={SignUp}>
         </Route>
-        <Route path="/Onboarding" component={Onboarding}>
+        <Route path="/Onboarding" component={Onboarding}>CEMainPage
+        </Route>
+        <Route path="/manageAccount" component={manageAccount}>
+        </Route>
+        <Route path="/CEMainPage" component={CEMainPage}>
         </Route>
         <Route path="/" component={Home}>
         </Route>
