@@ -19,7 +19,7 @@ function App() {
         </Route>
         <Route path="/signUp" component={SignUp}>
         </Route>
-        <Route path="/Onboarding" component={Onboarding}>CEMainPage
+        <Route path="/Onboarding" component={Onboarding}>
         </Route>
         <Route path="/manageAccount" component={manageAccount}>
         </Route>

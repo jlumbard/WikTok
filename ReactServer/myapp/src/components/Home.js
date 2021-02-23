@@ -39,9 +39,17 @@ export default class Home extends React.Component {
     this.state = {
       user: null
     }
+    this.hideModal = this.hideModal.bind(this);
+    this.goToOnboarding = this.goToOnboarding.bind(this);
   }
   componentDidMount() {
     this.getUserProfile()
+  }
+  hideModal(){
+    document.getElementById('modal').remove()
+  }
+  goToOnboarding(){
+    this.props.history.push("/Onboarding")
   }
   getUserProfile() {
     fetch("https://127.0.0.1:5000/getUser", {
@@ -77,9 +85,45 @@ export default class Home extends React.Component {
   }
 
 
+
   render() {
     if (this.state.user != null) {
 
+      //Have they onboarded?
+      console.log(this.state.user)
+      if(this.state.user.hasOwnProperty('Onboarded') && this.state.user.Onboarded == false || !this.state.user.hasOwnProperty('Onboarded')){
+        console.log("has not onboarded.")
+        return (
+          <Container>
+            <CoveredDiv id="modal">
+              <div>
+              You haven't onboarded yet. Onboarding helps us guess what kind of articles you like!
+              </div>
+              <button onClick={this.hideModal}>Skip</button>
+              {/* need to mark as onboarded */}
+              <button onClick={this.hideModal}>Remind Me Later</button>
+              <button onClick={this.goToOnboarding} >Onboard Now</button>
+            </CoveredDiv>
+            <LogoWrapper>
+              <img src={logo} alt="" />
+            </LogoWrapper>
+            <h1>
+              Home
+            </h1>
+  
+            <h4 >
+              Welcome, {this.state.user.fname}!
+            </h4>
+            <h4 style={{marginTop:"1rem"}}>
+              <a style = {linkStyle} href="/accountPage">Manage your account</a>, <a style = {linkStyle} href="/logOut">log out</a>, or view a <a style = {linkStyle} href="https://en.wikipedia.org/wiki/Special:Random">random Wikipedia Article!</a>
+            </h4>
+  
+          </Container>
+        );
+      }
+
+      //The've already done onboarding.
+      else{
       return (
         <Container>
           <LogoWrapper>
@@ -98,6 +142,7 @@ export default class Home extends React.Component {
 
         </Container>
       );
+      }
     }
     else {
 
@@ -119,6 +164,45 @@ export default class Home extends React.Component {
     }
   }
 }
+
+const CoveredDiv = styled.div`
+  width: 80%;
+  height: 70%;
+  background-color: rgba(0,0,0,0.87);
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  button {
+    width: 75%;
+    max-width: 350px;
+    min-width: 250px;
+    height: 40px;
+    border: none;
+    margin: 1rem 0;
+    box-shadow: 0px 14px 9px -15px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    background-color: #70edb9;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in;
+    &:hover {
+      transform: translateY(-3px);
+    }
+  }
+  div{
+    color:white;
+    text-align:center;
+    width:60%;
+    font-size:1.3em;
+    margin-bottom: 2rem;
+  }
+  
+
+`;
 
 
 const Container = styled.div`

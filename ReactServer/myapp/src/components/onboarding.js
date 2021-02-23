@@ -108,6 +108,7 @@ export default class Onboarding extends React.Component {
     console.log("Set state")
   }
   componentDidMount() {
+    console.log("component did mount")
     this.getUserProfile()
     this.getOnboardingArticles()
   }
@@ -265,12 +266,25 @@ export default class Onboarding extends React.Component {
     if(nextArticle === true){
       console.log("GOT TO END OF LIST")
       document.getElementsByClassName("skipButton")[0].innerText = "Finish";
+      var finishDiv = document.createElement('div');
+
+      finishDiv.style = "display:flex; flex-direcation:column; align-items:center; justify-content:center; position:absolute; height:80%; width:80%; background-color:rgba(0,0,0,0.8)"
+      var innerFinishDiv = document.createElement('div');
+      innerFinishDiv.innerText = "Finish"
+      innerFinishDiv.style = "color:white; font-size:1.3em;cursor:pointer;"
+      finishDiv.appendChild(innerFinishDiv)
+      finishDiv.onclick = this.pushOnboardingArticles
+
+      document.getElementById('iframeSection').innerHTML=""
+      document.getElementById('iframeSection').appendChild(finishDiv)
     }
   }
 
 
 
   render() {
+    console.log("render")
+
     //redirect if they're not signed in?
 
     if (this.state.articles !== null) {
@@ -280,7 +294,7 @@ export default class Onboarding extends React.Component {
             <div onClick = {this.pushOnboardingArticles} className="skipButton" style={skipButtonStyles}>Skip</div>
 
           </div>
-        <div style={sectionStyle}>
+        <div id="iframeSection" style={sectionStyle}>
           <img style={ImageStyle} src={LogoImage}></img>
 
 
@@ -300,6 +314,7 @@ export default class Onboarding extends React.Component {
       )
     }
     else {
+      console.log("empty articles")
       return (
         <div style={sectionStyle}>
           <img style={ImageStyle} src={LogoImage}></img>
