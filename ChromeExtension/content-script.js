@@ -3,6 +3,20 @@ console.log("HERERE")
 
 var TimeLoaded = Date.now();
 
+function moveToNextArticle(){
+
+        console.log("test")
+        fetch('https://127.0.0.1:5000/getNextArticle', {credentials: 'include', 
+        crossDomain:true, mode:'cors'})
+        .then(response => response.text())
+        .then(data => {
+            console.log(data)
+
+            window.location.replace(data)
+        })              
+    
+}
+
 
 fetch('https://127.0.0.1:5000/insert')
     .then(response => response.text())
@@ -37,3 +51,65 @@ fetch('https://127.0.0.1:5000/insert')
         // handle error
     });
 
+
+var actualCode = `
+    window.addEventListener('wheel', (e) => {
+    //lastX is colloquially global
+    if(window.lastX === undefined){
+        window.lastX = 0;
+    }
+    if(window.xposX === undefined){
+        window.xposX = 0;
+    }
+    
+    
+    window.xposX = (e.deltaX - window.lastX)*4;
+    if((e.deltaX - window.lastX)*4 > 150){
+        console.log("Forward to next")
+        document.getElementById('swipeIndicator').style.backgroundColor = 'red';
+        console.log("test")
+        fetch('https://127.0.0.1:5000/getNextArticle', {credentials: 'include', 
+        crossDomain:true, mode:'cors'})
+        .then(response => response.text())
+        .then(data => {
+            console.log(data)
+
+            window.location.replace(data)
+        })  
+    }
+    
+    
+    console.log(window.xposX);
+    
+    
+    if(e.deltaX >0 && window.lastX>0){//if its positive, movement is to right
+        console.log("made dot");
+        if(!document.contains(document.getElementById('swipeIndicator'))){
+            var swipeIndicator = document.createElement('div');
+            swipeIndicator.style = "position:absolute;left:50%;top:50%;width:5px;height:5px;border-radius:2.5px;background-color:black;"
+            swipeIndicator.id = "swipeIndicator";
+            document.querySelector('body').appendChild(swipeIndicator);
+        }
+        
+    }
+    
+    if(document.contains(document.getElementById('swipeIndicator'))){
+    
+        var val = 'translate3D('+window.xposX+'px, 0px, 0px)'
+        document.getElementById('swipeIndicator').style.transform = val;
+    }
+    
+    if(e.deltaX>20 && window.lastX>20){
+    console.log("both larger than 20");
+    }
+        
+        console.log(e.deltaX);
+        console.log(window.lastX);
+    window.lastX = e.deltaX
+    });`
+
+
+
+var script = document.createElement('script');
+script.textContent = actualCode;
+document.getElementsByTagName('body')[0].appendChild(script);
