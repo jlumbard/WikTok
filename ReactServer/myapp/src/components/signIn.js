@@ -59,6 +59,7 @@ export default class SignIn extends React.Component {
       )
 
   }
+  
   render() {
 
     return (
@@ -71,7 +72,7 @@ export default class SignIn extends React.Component {
      
           <StyledInput required placeholder="Username" ref={(ref) => { this.uname = ref }}></StyledInput>
           <StyledInput type="password" required placeholder="Password" ref={(ref) => { this.pword = ref }}></StyledInput>
-          <button text="Sign In" onClick={this.handleSubmit}>Log In</button>
+          <button type="button" text="Sign In" onClick={this.handleSubmit}>Log In</button>
         </Form>
         <label>Don't have an account?</label>
         <Link style={{fontSize:"13px"}} to="/signUp"> Sign up here.</Link>

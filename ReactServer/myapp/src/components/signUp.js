@@ -82,7 +82,7 @@ export default class SignUp extends React.Component {
         <StyledInput required placeholder="Last Name" ref={(ref) => { this.lname = ref }} label="Last Name" />
 
 
-        <button text="Sign Up" onClick={this.handleSubmit}>Sign Up</button>
+        <button type="button" text="Sign Up" onClick={this.handleSubmit}>Sign Up</button>
         </Form>
         <label>Already have an account?</label>
         <Link style={{fontSize:"13px"}} to="/signIn"> Log in here.</Link>
