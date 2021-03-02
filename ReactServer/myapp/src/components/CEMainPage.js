@@ -4,9 +4,70 @@ import logo from '../images/logo.png';
 import styled from 'styled-components';
 
 
+const stylesForDashboard = `
+
+#vitalStatsHolder{
+  display:flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin: 15px;
+  width:100%;
+  margin-bottom: 20px;
+}
+
+.vitalStats{
+  margin: 20px;
+  height:100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  position: relative;
+  width: 18%;
+  height: 0;
+  padding-bottom: 18%;
+  color:white;
+  display:flex;
+  flex-direction: row;
+  -moz-background-clip: padding;     /* Firefox 3.6 */
+  -webkit-background-clip: padding;  /* Safari 4? Chrome 6? */
+  background-clip: padding-box; 
+}
+.vitalStatsDecorativeLine{
+  background-color: white;
+  width:3px;
+  height: 80%;
+  padding-bottom: 80%;
+  margin-right: 10px;
+  margin-top:10%;
+  margin-left:10%;
+}
+
+.statHolder{
+  margin-top:10%;
+  display: inline-block;
+  height: min-content;
+}
+
+.statHolder h3{
+  font-size:6vw;
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
+
+.statHolder p{
+  color: black;
+  font-size: 1.5vw;
+}
+
+.statLabel {
+  font-size: 
+}
+
+
+`
+
 var textStyle = {
 
-  textAlign:"center",
+  textAlign: "center",
   fontFamily: "Open Sans",
   fontSize: "13vw",
   marginTop: "5px",
@@ -15,17 +76,17 @@ var textStyle = {
 }
 
 var linkStyle = {
-  color:"black",
+  color: "black",
 }
 
 var textStyleSmall = {
 
-  textAlign:"center",
+  textAlign: "center",
   fontFamily: "Open Sans",
   fontSize: "4vw",
   marginTop: "5px",
   marginBottom: "5px",
-  color:"white"
+  color: "white"
 
 }
 
@@ -43,7 +104,7 @@ export default class CEMainPage extends React.Component {
   componentDidMount() {
     this.getUserProfile()
   }
-  pushToHomePage(){
+  pushToHomePage() {
     this.props.history.push('/LogIn')
   }
   getUserProfile() {
@@ -88,16 +149,33 @@ export default class CEMainPage extends React.Component {
           <LogoWrapper>
             <img src={logo} alt="" />
           </LogoWrapper>
-          <h1>
-            Home
-          </h1>
 
-          <h4 >
-            Welcome, {this.state.user.fname}!
-          </h4>
-          <h4 style={{marginTop:"1rem"}}>
-            <a style = {linkStyle} href="/accountPage">Manage your account</a>, <a style = {linkStyle} href="/logOut">log out</a>, or view a <a style = {linkStyle} href="https://en.wikipedia.org/wiki/Special:Random">random Wikipedia Article!</a>
-          </h4>
+          <style>{stylesForDashboard}</style>
+          <div id="vitalStatsHolder">
+          <div class="vitalStats">
+            <div class="vitalStatsDecorativeLine"></div>
+            <div class='statHolder'>
+              <h3>9</h3>
+              <p class="statLabel">Articles Today </p>
+            </div>
+          </div>
+          <div class="vitalStats">
+            <div class="vitalStatsDecorativeLine"></div>
+            <div class='statHolder'>
+              <h3>13</h3>
+              <p class="statLabel">Minutes Spent</p>
+            </div>
+          </div>
+          <div class="vitalStats">
+            <div class="vitalStatsDecorativeLine"></div>
+            <div class='statHolder'>
+              <h3 >Music</h3>
+              <p class="statLabel">Favourite topic</p>
+            </div>
+          </div>
+          </div>
+
+
 
         </Container>
       );
@@ -105,16 +183,16 @@ export default class CEMainPage extends React.Component {
     else {
       return (
         <Container>
-        <LogoWrapper>
-          <img src={logo} alt="" />
-        </LogoWrapper>
-        <h4>    
-                You're not logged in. 
+          <LogoWrapper>
+            <img src={logo} alt="" />
+          </LogoWrapper>
+          <h4>
+            You're not logged in.
         </h4>
 
-        <Form>
-        <button text="Log In" onClick={this.pushToHomePage}>Log In</button>
-        </Form>
+          <Form>
+            <button text="Log In" onClick={this.pushToHomePage}>Log In</button>
+          </Form>
 
         </Container>
       );
