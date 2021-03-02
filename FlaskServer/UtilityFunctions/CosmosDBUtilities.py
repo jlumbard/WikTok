@@ -217,7 +217,7 @@ def checkUser(email, pword):
 
 def getUserRatingsData():
     container = getContainer(INTERACTIONS_CONTAINER_ID)
-    query = "SELECT us.user, us.timeSpent, us.article, us.liked FROM InteractionsV1 us"
+    query = "SELECT us.user, us.timeSpent, us.article, us.liked FROM InteractionsV1 us WHERE CONTAINS (us.article, 'https://en.wikipedia.org', true)"
     items = list(container.query_items(
         query=query,
         enable_cross_partition_query=True
