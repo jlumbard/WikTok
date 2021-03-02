@@ -28,6 +28,7 @@ def returnDataOnArticle(articleLink):
     articleData = {}
     articleData['firstParagraph'], articleData['title'] = returnWikipediaFirstParagraph(articleLink)
     articleData['pageViews'],articleData['pageViewTrend'], articleData['rankedKeywords'] = getMetrics(articleTitle)
+    print("made it to the end of returndataonarticle")
     return articleData
 
 def getMetrics(articleTitle):
@@ -84,6 +85,7 @@ def getViewNumberTrend(arrayOfValues):
 def pushDataOnArticle(articleLink):
     print(articleLink)
     articleData = returnDataOnArticle(articleLink)
+    print("WE HAVE ARRIVED OUTSIDE OF THE FUNCTION")
     articleDoesntExist = CosmosDBUtilities.getArticleByTitle(articleData['title']) #True if it doesn't exist 
     if(articleDoesntExist):
         print("ARTICLE DIDN'T EXIST, PUSHING TO DB")

@@ -46,7 +46,7 @@ def getPopularityBasedRecs():
     pageMetrics_data['pageViewsTrend_zscore'] = stats.zscore(pageViewsTrend)
     pageMetrics_data['Adjusted_Page_Views_zscore'] = pageMetrics_data['pageViews_zscore'] * 0.75
     pageMetrics_data['sumOfScores'] = pageMetrics_data['Adjusted_Page_Views_zscore'] + pageMetrics_data['pageViewsTrend_zscore']
-    print(np.max(pageMetrics_data['Adjusted_Page_Views_zscore']))
+    # print(np.max(pageMetrics_data['Adjusted_Page_Views_zscore']))
     
     pageMetrics_data = pageMetrics_data.sort_values(by='sumOfScores', ascending=False)
     # print(pageMetrics_data)
@@ -119,21 +119,12 @@ def getContentBasedRecs():
         for i in range (len(titleOfArticle)):
             similarArticles.append(res[i])
 
-    # print("SIMILAR ARTICLES")
-    # print(similarArticles)
+
 
     modifiedSimilarArticles =  removeArticlesRead(np.array(similarArticles))
 
-    # # print("MODIFIED SIMILAR ARTICLES")
-    # # print(modifiedSimilarArticles)
+   
 
-    # print('THE LENGTH OF SIMILARARTICLES IS: ' + str(len(modifiedSimilarArticles)))
-    # print(modifiedSimilarArticles)
-    # index = random.randint(0,len(modifiedSimilarArticles)-1)
-    # print("THE INDEX IS: " + str(index))
-    
-    # #return the top 5 most similar articles
-    # print('THE URL IS: ' +modifiedSimilarArticles[index])
     return modifiedSimilarArticles
 
 def predictNextArticlev1(currentURL):
@@ -157,8 +148,8 @@ def predictNextArticlev1(currentURL):
         return CFRecommendationsWithoutPrintables[index]
     else:
         index = random.randint(0,len(allInitialRecommendations)-1)
-        print("THIS IS WHAT WE WANT TO SEE")
-        print(allInitialRecommendations)
+       
+        # print(allInitialRecommendations)
         return allInitialRecommendations[index]
 
 def collaborativeFiltering():
@@ -177,19 +168,19 @@ def collaborativeFiltering():
     "liked":{"0":0, "False": 0, "True": 2}}
     userRatingsDataDf = userRatingsDataDf.replace(numeric_categories)
     userRatingsDataDf['rating'] = userRatingsDataDf.timeSpent.values + userRatingsDataDf.liked.values
-    print("RATINGS: ", userRatingsDataDf['rating'].values)
+    # print("RATINGS: ", userRatingsDataDf['rating'].values)
     ratingsTable = userRatingsDataDf.pivot_table(index=['article'], columns=['user'], values='rating').fillna(0)
-    print("RATINGS TABLE: ", ratingsTable.values)
-    print("Matrix before factorization: ")
-    print(ratingsTable)
+    # print("RATINGS TABLE: ", ratingsTable.values)
+    # print("Matrix before factorization: ")
+    # print(ratingsTable)
     mf = matrixFactorization(ratingsTable.values, K=3, alpha=0.1, beta=0.0001, iterations=200)
     mf.train()
-    print("Matrix after factorization: ")
-    print(mf.full_matrix())
+    # print("Matrix after factorization: ")
+    # print(mf.full_matrix())
     ratingsTable = ratingsTable.reset_index()
     columns = ratingsTable.columns.values.tolist()
     columns.pop(0) 
-    print(columns)
+    # print(columns)
     df = pd.DataFrame(mf.full_matrix(), columns = columns )
     df['article'] = ratingsTable['article'].values
     df.set_index('article', inplace = True)
@@ -256,8 +247,8 @@ class matrixFactorization():
             self.sgd()
             mse = self.mse()
             training_process.append((i, mse))
-            if (i+1) % 10 == 0:
-                print("Iteration: %d ; Mean Squared Error = %.4f" % (i+1, mse))
+            # if (i+1) % 10 == 0:
+                # print("Iteration: %d ; Mean Squared Error = %.4f" % (i+1, mse))
 
         return training_process
 
