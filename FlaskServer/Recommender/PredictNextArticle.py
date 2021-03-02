@@ -136,7 +136,7 @@ def getContentBasedRecs():
     # print('THE URL IS: ' +modifiedSimilarArticles[index])
     return modifiedSimilarArticles
 
-def predictNextArticlev1():
+def predictNextArticlev1(currentURL):
     contentBasedRecs = getContentBasedRecs()
     popularityBasedRecs = getPopularityBasedRecs()
     

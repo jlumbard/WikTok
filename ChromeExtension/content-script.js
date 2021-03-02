@@ -1,3 +1,5 @@
+
+
 console.log("HERERE")
 
 
@@ -37,12 +39,21 @@ fetch('https://127.0.0.1:5000/insert')
             console.log("arrow")
             arrow.addEventListener('click',function(){
                 console.log("test")
-                fetch('https://127.0.0.1:5000/getNextArticle', {credentials: 'include', 
+                var url = 'https://127.0.0.1:5000/getNextArticle'
+                var currentArticle=""
+                if(window.location.href.includes('/wiki/')){
+                    currentArticle = window.location.href.split('/wiki/')[1]
+                    console.log(currentArticle)
+                }
+                if(currentArticle != ""){
+                    url = url+"?currentURL=" + currentArticle
+                }``
+                
+                fetch(url, {credentials: 'include', 
                 crossDomain:true, mode:'cors'})
                 .then(response => response.text())
                 .then(data => {
                     console.log(data)
-
                     window.location.replace(data)
                 })              
             })
@@ -67,8 +78,8 @@ var actualCode = `
     if((e.deltaX - window.lastX)*4 > 150){
         console.log("Forward to next")
         document.getElementById('swipeIndicator').style.backgroundColor = 'red';
-        document.getElementById('swipeIndicator').style.width = e.deltaX - window.lastX)*4;
-        document.getElementById('swipeIndicator').style.height = e.deltaX - window.lastX)*4;
+        document.getElementById('swipeIndicator').style.width = e.deltaX - window.lastX*4;
+        document.getElementById('swipeIndicator').style.height = e.deltaX - window.lastX*4;
         console.log("test")
         fetch('https://127.0.0.1:5000/getNextArticle', {credentials: 'include', 
         crossDomain:true, mode:'cors'})

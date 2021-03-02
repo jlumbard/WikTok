@@ -59,7 +59,10 @@ def getNextArticle():
     #article they're currently on and their engagement with it should already be pushed, seperate endpoint.
     # or should it?
     #returns, next article to nav to and then client side javascript just redirects them there.
-    nextArticleUrl = PredictNextArticle.predictNextArticlev1()
+    print("Current Article is:")
+    print(request.args.get('currentURL',None))
+    currentURL = request.args.get('currentURL',None)
+    nextArticleUrl = PredictNextArticle.predictNextArticlev1(currentURL)
     ArticleDataUtilities.pushDataOnArticle(nextArticleUrl)
     print(nextArticleUrl)
     return nextArticleUrl
