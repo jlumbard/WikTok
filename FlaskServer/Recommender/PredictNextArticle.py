@@ -145,7 +145,16 @@ def predictNextArticlev1():
 
     if not allInitialRecommendations:
         index = random.randint(0,len(CFRecommendations)-1)
-        return CFRecommendations[index]
+        CFRecommendationsWithoutPrintables = []
+        print(CFRecommendationsWithoutPrintables)
+        for x in CFRecommendations:
+            #Sometimes the links pulled from the database have "printable" appended at the end. 
+            #remove it if so.
+            if('?printable=yes' in x):
+                CFRecommendationsWithoutPrintables.append(x.replace('?printable=yes',''))
+            else:
+                CFRecommendationsWithoutPrintables.append(x)
+        return CFRecommendationsWithoutPrintables[index]
     else:
         index = random.randint(0,len(allInitialRecommendations)-1)
         print("THIS IS WHAT WE WANT TO SEE")

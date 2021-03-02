@@ -21,6 +21,8 @@ import nltk
 #https://en.wikipedia.org/wiki/Wikipedia:Database_download
 
 def returnDataOnArticle(articleLink):
+    print("ARTICLELINK")
+    print(articleLink)
     #https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/University_of_Regina/daily/2020101000/2020103000
     articleTitle = articleLink.split('/wiki/')[1]
     articleData = {}
@@ -31,6 +33,9 @@ def returnDataOnArticle(articleLink):
 def getMetrics(articleTitle):
     end = datetime.today().strftime('%Y%m%d00')
     start = (datetime.today() - timedelta(days=6*30)).strftime('%Y%m%d00')
+    if('?printable=yes' in articleTitle):
+        articleTitle = articleTitle.replace('?printable=yes','')
+
     pageViewURL = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/" + articleTitle +"/monthly/"+start+"/"+end
     print(pageViewURL)
 
