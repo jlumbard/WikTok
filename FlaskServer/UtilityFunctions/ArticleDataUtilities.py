@@ -28,7 +28,7 @@ def returnDataOnArticle(articleLink):
     articleData = {}
     articleData['firstParagraph'], articleData['title'] = returnWikipediaFirstParagraph(articleLink)
     articleData['pageViews'],articleData['pageViewTrend'], articleData['rankedKeywords'] = getMetrics(articleTitle)
-    print("made it to the end of returndataonarticle")
+    # print("made it to the end of returndataonarticle")
     return articleData
 
 def getMetrics(articleTitle):
@@ -38,7 +38,7 @@ def getMetrics(articleTitle):
         articleTitle = articleTitle.replace('?printable=yes','')
 
     pageViewURL = "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/" + articleTitle +"/monthly/"+start+"/"+end
-    print(pageViewURL)
+    # print(pageViewURL)
 
     headers= {
     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -63,7 +63,7 @@ def getMetrics(articleTitle):
 
     totalViews = 0
     viewEachMonth = []
-    print(r.text)
+    # print(r.text)
     jsj = json.loads(r.text)
     #Use the below loop for two things: calc the total number of views and the way it is trending last 6 months in an array
     for weeklyMetric in jsj['items']:
@@ -85,7 +85,7 @@ def getViewNumberTrend(arrayOfValues):
 def pushDataOnArticle(articleLink):
     print(articleLink)
     articleData = returnDataOnArticle(articleLink)
-    print("WE HAVE ARRIVED OUTSIDE OF THE FUNCTION")
+    # print("WE HAVE ARRIVED OUTSIDE OF THE FUNCTION")
     articleDoesntExist = CosmosDBUtilities.getArticleByTitle(articleData['title']) #True if it doesn't exist 
     if(articleDoesntExist):
         print("ARTICLE DIDN'T EXIST, PUSHING TO DB")
