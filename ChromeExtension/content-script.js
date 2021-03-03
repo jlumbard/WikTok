@@ -1,38 +1,50 @@
 
 var TimeLoaded = Date.now();
 
-function moveToNextArticle(){
+function moveToNextArticle() {
 
-        console.log("test")
-        fetch('https://127.0.0.1:5000/getNextArticle', {credentials: 'include', 
-        crossDomain:true, mode:'cors'})
+    console.log("test")
+    console.log("test")
+    var url = 'https://127.0.0.1:5000/getNextArticle'
+    var currentArticle = ""
+    if (window.location.href.includes('/wiki/')) {
+        currentArticle = window.location.href
+        console.log(currentArticle)
+    }
+    if (currentArticle != "") {
+        url = url + "?currentURL=" + currentArticle
+    } ``
+
+    fetch(url, {
+        credentials: 'include',
+        crossDomain: true, mode: 'cors'
+    })
         .then(response => response.text())
         .then(data => {
             console.log(data)
-
             window.location.replace(data)
-        })              
-    
+        })
+
 }
 
-function stripArticle(){
+function stripArticle() {
 
-// it's hacky, but it gets the job done. styles the current article. 
+    // it's hacky, but it gets the job done. styles the current article. 
 
-    var elementsToClearById = ['mw-page-base', 'mw-head', 'footer', 'mw-navigation', 'siteNotice','mw-head-base','top','mw-data-after-content', 'siteSub'];
+    var elementsToClearById = ['mw-page-base', 'mw-head', 'footer', 'mw-navigation', 'siteNotice', 'mw-head-base', 'top', 'mw-data-after-content', 'siteSub'];
 
-    for (x =0; x < elementsToClearById.length; x++) {
+    for (x = 0; x < elementsToClearById.length; x++) {
         var element = document.getElementById(elementsToClearById[x]);
-        while (element.firstChild){
-             element.removeChild(element.lastChild)
+        while (element.firstChild) {
+            element.removeChild(element.lastChild)
         }
         element.parentNode.removeChild(element);
     }
 
     var elementsToClearByClass = ['box-Tone', 'box-Expand_section', 'box-Update', 'box-Multiple_issues', 'mw-indicator', 'box-More_citations_needed', 'box-More_citations_needed_section']
-    for (x=0; x<elementsToClearByClass.length;x++) {
+    for (x = 0; x < elementsToClearByClass.length; x++) {
         var element = document.getElementsByClassName(elementsToClearByClass[x]);
-        while(element.length>0){
+        while (element.length > 0) {
             element[0].parentNode.removeChild(element[0]);
         }
     }
@@ -52,21 +64,21 @@ function stripArticle(){
     fetch(chrome.runtime.getURL('/navigation.html'))
         .then(response => response.text())
         .then(data => {
-            content.parentNode.insertAdjacentHTML('afterbegin',data);
+            content.parentNode.insertAdjacentHTML('afterbegin', data);
             updateDrawer();
         }).catch(err => {
 
         });
-    
+
 }
 
 
-function updateDrawer(){
+function updateDrawer() {
 
     var drawerDiv = document.getElementById("drawer-main-div");
-    var links = [{url: "URL1:)xxxxxxxxxxxxxxxxx"},{url: "URL 2 :|"},{url: "URL 3 :("}];
-    
-    for(const link of links){
+    var links = [{ url: "URL1:)xxxxxxxxxxxxxxxxx" }, { url: "URL 2 :|" }, { url: "URL 3 :(" }];
+
+    for (const link of links) {
         var linkDiv = document.createElement("div");
         linkDiv.classList.add('menu-item');
         var clickLink = document.createElement("a");
@@ -79,39 +91,41 @@ function updateDrawer(){
 fetch('https://127.0.0.1:5000/insert')
     .then(response => response.text())
     .then(data => {
-        document.querySelector('body').insertAdjacentHTML('afterend',data);
+        document.querySelector('body').insertAdjacentHTML('afterend', data);
         //I would prefer not to have this code here, but that is a convo for later I think....
 
         var thumbs = document.querySelector('#thumbsUp')
-        thumbs.addEventListener('click',function(){
-            chrome.storage.sync.set({articleLiked: true}, function() {
+        thumbs.addEventListener('click', function () {
+            chrome.storage.sync.set({ articleLiked: true }, function () {
                 console.log("articleLikedTrue");
                 document.getElementById('thumbsUp').style.color = 'black;'
-              });
+            });
         })
 
         var arrows = document.querySelectorAll('.arrow')
-        for ( const arrow of arrows){
+        for (const arrow of arrows) {
             console.log("arrow")
-            arrow.addEventListener('click',function(){
+            arrow.addEventListener('click', function () {
                 console.log("test")
                 var url = 'https://127.0.0.1:5000/getNextArticle'
-                var currentArticle=""
-                if(window.location.href.includes('/wiki/')){
-                    currentArticle = window.location.href.split('/wiki/')[1]
+                var currentArticle = ""
+                if (window.location.href.includes('/wiki/')) {
+                    currentArticle = window.location.href
                     console.log(currentArticle)
                 }
-                if(currentArticle != ""){
-                    url = url+"?currentURL=" + currentArticle
-                }``
-                
-                fetch(url, {credentials: 'include', 
-                crossDomain:true, mode:'cors'})
-                .then(response => response.text())
-                .then(data => {
-                    console.log(data)
-                    window.location.replace(data)
-                })              
+                if (currentArticle != "") {
+                    url = url + "?currentURL=" + currentArticle
+                } ``
+
+                fetch(url, {
+                    credentials: 'include',
+                    crossDomain: true, mode: 'cors'
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data)
+                        window.location.replace(data)
+                    })
             })
         }
     }).catch(err => {
@@ -137,14 +151,25 @@ var actualCode = `
         document.getElementById('swipeIndicator').style.width = e.deltaX - window.lastX*4;
         document.getElementById('swipeIndicator').style.height = e.deltaX - window.lastX*4;
         console.log("test")
-        fetch('https://127.0.0.1:5000/getNextArticle', {credentials: 'include', 
-        crossDomain:true, mode:'cors'})
+        var url = 'https://127.0.0.1:5000/getNextArticle'
+        var currentArticle = ""
+        if (window.location.href.includes('/wiki/')) {
+            currentArticle = window.location.href
+            console.log(currentArticle)
+        }
+        if (currentArticle != "") {
+            url = url + "?currentURL=" + currentArticle
+        } 
+
+        fetch(url, {
+            credentials: 'include',
+            crossDomain: true, mode: 'cors'
+        })
         .then(response => response.text())
         .then(data => {
             console.log(data)
-
             window.location.replace(data)
-        })  
+        }) 
     }
     
     

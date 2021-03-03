@@ -3,7 +3,8 @@ import BackgroundImage from '../images/background2.jpg';
 
 var sectionStyle = {
     width: "100vw",
-    height: "100vh",
+    minHeight:"100vh",
+    height: "auto",
     backgroundImage: "url(" + BackgroundImage + ")",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center center",

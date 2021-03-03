@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 import logo from '../images/logo.png';
 import styled from 'styled-components';
+import $ from 'jquery';
+import { Textfit } from 'react-textfit';
 
 
 const stylesForDashboard = `
@@ -14,17 +16,18 @@ const stylesForDashboard = `
   width:100%;
   margin-bottom: 20px;
   align-items: center;
+  height:80%;
 }
 
 .vitalStats{
-  margin: 20px;
+  margin: 10px;
   height:100%;
   background-color: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
   position: relative;
-  width: 18%;
+  width: 58%;
   height: 0;
-  padding-bottom: 18%;
+  padding-bottom: 38%;
   color:white;
   display:flex;
   flex-direction: row;
@@ -35,8 +38,8 @@ const stylesForDashboard = `
 .vitalStatsDecorativeLine{
   background-color: white;
   width:3px;
-  height: 80%;
-  padding-bottom: 80%;
+  height: 38%;
+  padding-bottom: 45%;
   margin-right: 10px;
   margin-top:10%;
   margin-left:10%;
@@ -46,21 +49,23 @@ const stylesForDashboard = `
   margin-top:10%;
   display: inline-block;
   height: min-content;
+  width:100%;
 }
 
 .statHolder h3{
   font-size:6vw;
   margin-bottom: 0px;
   margin-top: 0px;
+  width:100%;
 }
 
 .statHolder p{
   color: black;
-  font-size: 1.5vw;
+  font-size: 3.5vw;
 }
 
 .statLabel {
-  font-size: 
+  margin:0px;
 }
 
 
@@ -99,15 +104,66 @@ export default class CEMainPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: null
+      user: null,
+      favoriteTopic: null,
+      mostRecentTopic: null,
+      minutesRead: null,
+      articlesRead: null
     }
+  }
+  resize(el, factor) {
+
+    // Get element width
+    var width = el.offsetWidth;
+  
+    // set default for factor
+    if (typeof factor == 'undefined') {
+      factor = 5;
+    }
+  
+    // Set fontsize to new size
+    el.style.fontSize = (width / factor | 0) + 'px';
   }
   componentDidMount() {
     this.getUserProfile()
   }
+
   pushToHomePage() {
     this.props.history.push('/LogIn')
   }
+  getUserDashboardData() {
+    this.getCurrentStats()
+  }
+
+  getCurrentStats(){
+    fetch("https://127.0.0.1:5000/getRecentStats", {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => res.json())
+      .then(
+        (json) => {
+          console.log("got response")
+          console.log(json)
+          this.setState({
+            articlesRead: json['articlesRead'],
+            minutesRead: json['minutesRead'],
+            favoriteTopic: json['favoriteTopic'],
+            mostRecentTopic:json['mostRecentTopic']
+          });
+          
+        },
+        (error) => {
+          console.log("error")
+        }
+      )
+  }
+
   getUserProfile() {
     fetch("https://127.0.0.1:5000/getUser", {
       method: 'GET',
@@ -127,6 +183,19 @@ export default class CEMainPage extends React.Component {
             isLoaded: true,
             user: json
           });
+          if (this.state.articlesToday == null) {
+            console.log('here')
+            this.getUserDashboardData()
+          }
+          // if ($('.statHolder').length > 0) {
+          //   console.log("Fitting text")
+          //   $(".statHolder h3").fitText(0.90);
+          // }
+          this.resize(document.querySelectorAll('.statHolder h3')[0],2.7)
+          this.resize(document.querySelectorAll('.statHolder h3')[1],2.7)
+          this.resize(document.querySelectorAll('.statHolder h3')[2],2.8)
+          this.resize(document.querySelectorAll('.statHolder h3')[3],2.8)
+
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -145,6 +214,7 @@ export default class CEMainPage extends React.Component {
   render() {
     if (this.state.user != null) {
 
+
       return (//This should be the informational area, it should have statistics about what the user is currently doing 
         <Container>
           <LogoWrapper>
@@ -153,27 +223,34 @@ export default class CEMainPage extends React.Component {
 
           <style>{stylesForDashboard}</style>
           <div id="vitalStatsHolder">
-          <div class="vitalStats">
-            <div class="vitalStatsDecorativeLine"></div>
-            <div class='statHolder'>
-              <h3>9</h3>
-              <p class="statLabel">Articles Today </p>
+            <div className="vitalStats">
+              <div className="vitalStatsDecorativeLine"></div>
+              <div className='statHolder'>
+                <h3>{this.state.articlesRead}</h3>
+                <p className="statLabel">Articles Today </p>
+              </div>
             </div>
-          </div>
-          <div class="vitalStats">
-            <div class="vitalStatsDecorativeLine"></div>
-            <div class='statHolder'>
-              <h3>13</h3>
-              <p class="statLabel">Minutes Spent</p>
+            <div className="vitalStats">
+              <div className="vitalStatsDecorativeLine"></div>
+              <div className='statHolder'>
+                <h3>{this.state.minutesRead}</h3>
+                <p className="statLabel">Minutes Spent</p>
+              </div>
             </div>
-          </div>
-          <div class="vitalStats">
-            <div class="vitalStatsDecorativeLine"></div>
-            <div class='statHolder'>
-              <h3 >Music</h3>
-              <p class="statLabel">Favourite topic</p>
+            <div className="vitalStats">
+              <div className="vitalStatsDecorativeLine"></div>
+              <div className='statHolder'>
+                <h3 >{this.state.favoriteTopic}</h3>
+                <p className="statLabel">Favourite topic</p>
+              </div>
             </div>
-          </div>
+            <div className="vitalStats">
+              <div className="vitalStatsDecorativeLine"></div>
+              <div className='statHolder'>
+                <h3 >{this.state.mostRecentTopic}</h3>
+                <p className="statLabel">Last topic</p>
+              </div>
+            </div>
           </div>
 
 
@@ -204,7 +281,7 @@ export default class CEMainPage extends React.Component {
 
 const Container = styled.div`
   min-width: 100%;
-
+  min-height:100vh;
   background-color: rgba(255, 255, 255, 0.8);
   height: 100%;
   display: flex;
@@ -260,7 +337,7 @@ const Form = styled.form`
 
 const LogoWrapper = styled.div`
   img {
-    height: 4rem;
+    height: 2.5rem;
   }
   span {
     color: #5dc399;

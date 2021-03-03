@@ -207,7 +207,7 @@ const CoveredDiv = styled.div`
 
 const Container = styled.div`
   min-width: 100%;
-
+  min-height:100vh;
   background-color: rgba(255, 255, 255, 0.8);
   height: 100%;
   display: flex;
