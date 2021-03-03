@@ -18,7 +18,7 @@ def checkLoggedIn(userID = None, sessionID = None):
         return False
     else:
         if(userID == sessionIDTest['userID']):
-            return True;
+            return True
         else:
             return False
 

@@ -128,13 +128,17 @@ def getContentBasedRecs():
     return modifiedSimilarArticles
 
 def predictNextArticlev1(currentURL):
+    print('THE CURRENT URL IS: ')
+    print(currentURL)
     contentBasedRecs = getContentBasedRecs()
     popularityBasedRecs = getPopularityBasedRecs()
     
     allInitialRecommendations = contentBasedRecs + popularityBasedRecs
-    CFRecommendations = collaborativeFiltering()
+    
 
     if not allInitialRecommendations:
+        CFRecommendations = collaborativeFiltering()
+        print('CF RECS')
         index = random.randint(0,len(CFRecommendations)-1)
         CFRecommendationsWithoutPrintables = []
         print(CFRecommendationsWithoutPrintables)
@@ -147,6 +151,7 @@ def predictNextArticlev1(currentURL):
                 CFRecommendationsWithoutPrintables.append(x)
         return CFRecommendationsWithoutPrintables[index]
     else:
+        print("CONTENT BASED RECS")
         index = random.randint(0,len(allInitialRecommendations)-1)
        
         # print(allInitialRecommendations)

@@ -135,7 +135,7 @@ def getArticleByTitle(title):
         enable_cross_partition_query=True,
         parameters=[dict(name="@UniqueID", value=str(title))]
     ))
-    print("ITEMS")
+    # print("ITEMS")
     print(items)
     if(len(items) == 0):
         return True
