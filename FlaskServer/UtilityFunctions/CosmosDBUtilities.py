@@ -47,6 +47,7 @@ def pushWikiPageData(dataArray):
 
 def pushUserData(dataArray):
     dataArray['id'] = str(uuid.uuid4())
+    dataArray['datePushed'] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     container = getContainer(INTERACTIONS_CONTAINER_ID)
     #The data array below will have to be formatted.
     print(dataArray)
@@ -199,6 +200,16 @@ def getUserByID(ID):
 def getArticlesRead(ID):
     container = getContainer(INTERACTIONS_CONTAINER_ID)
     query = "SELECT DISTINCT u.article FROM InteractionsV1 u WHERE u.user=@ID"
+    items = list(container.query_items(
+        query=query,
+        enable_cross_partition_query=True,
+        parameters=[dict(name="@ID", value=ID)]
+    ))
+    return items
+
+def getAllArticlesReadData(ID):
+    container = getContainer(INTERACTIONS_CONTAINER_ID)
+    query = "SELECT DISTINCT * FROM InteractionsV1 u WHERE u.user=@ID"
     items = list(container.query_items(
         query=query,
         enable_cross_partition_query=True,

@@ -9,6 +9,7 @@ import UtilityFunctions.ArticleDataUtilities as ArticleDataUtilities
 from flask_cors import CORS, cross_origin
 import pandas as pd
 import random
+import datetime
 
 #TO RUN:
 #export FLASK_APP=main.py
@@ -100,6 +101,26 @@ def pushUserInteraction():
 @cross_origin()
 def getInsert():
     return render_template('LeftRightArrows.html')
+
+@app.route('/getRecentStats',methods=['GET'])
+@cross_origin(supports_credentials=True, origin=['https://en.wikipedia.org/', 'https://127.0.0.1/'])
+def getRecentStats():
+    if( not session.get('user',False)):
+        return "ERROR"
+    allArticles = CosmosUtilities.getAllArticlesReadData(session['user']['id'])
+    #convert back to datetime
+    articlesRead = 0
+    minutesRead = 0
+    for x in allArticles:
+        if(x.get('datePushed',False)):
+            x['datePushed'] = datetime.datetime.strptime(x['datePushed'].replace('"',''),"%d/%m/%Y %H:%M:%S")
+            if(x['datePushed'] >= datetime.datetime.now() - datetime.timedelta(hours=24)):
+                #if its less than a day old
+                articlesRead += 1
+                minutesRead += abs(x['timeSpent'])
+    favoriteTopic = "Music"
+    mostRecentTopic = "Music"
+    return {'articlesRead':articlesRead, 'minutesRead':minutesRead,'favoriteTopic':favoriteTopic,'mostRecentTopic':mostRecentTopic}
 
 @app.route('/getUser',methods=['GET'])
 @cross_origin(supports_credentials=True, origin=['https://en.wikipedia.org/', 'https://127.0.0.1/', 'http://127.0.0.1/'])
