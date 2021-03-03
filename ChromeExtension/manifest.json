@@ -5,7 +5,9 @@
   "permissions": ["tabs","webRequest","webNavigation","activeTab","declarativeContent", "storage","cookies","http://localhost/","http://127.0.0.1:3000/","http://127.0.0.1/","http://localhost:5000/","https://en.wikipedia.org/*"],
   "options_page": "options.html",
   "web_accessible_resources": [
-    "https://127.0.0.1:5000/insert"],
+    "https://127.0.0.1:5000/insert",
+    "navigation.html"
+  ],
   "content_scripts": [
     {
       "matches": ["https://en.wikipedia.org/*"],

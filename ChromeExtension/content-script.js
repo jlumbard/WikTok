@@ -1,4 +1,4 @@
-console.log("HERERE")
+console.log("HERERERERE")
 
 
 var TimeLoaded = Date.now();
@@ -17,6 +17,66 @@ function moveToNextArticle(){
     
 }
 
+function stripArticle(){
+
+// it's hacky, but it gets the job done. styles the current article. 
+
+    var elementsToClearById = ['mw-page-base', 'mw-head', 'footer', 'mw-navigation', 'siteNotice','mw-head-base','top','mw-data-after-content', 'siteSub'];
+
+    for (x =0; x < elementsToClearById.length; x++) {
+        var element = document.getElementById(elementsToClearById[x]);
+        while (element.firstChild){
+             element.removeChild(element.lastChild)
+        }
+        element.parentNode.removeChild(element);
+    }
+
+    var elementsToClearByClass = ['box-Tone', 'box-Expand_section', 'box-Update', 'box-Multiple_issues', 'mw-indicator', 'box-More_citations_needed', 'box-More_citations_needed_section']
+    for (x=0; x<elementsToClearByClass.length;x++) {
+        var element = document.getElementsByClassName(elementsToClearByClass[x]);
+        while(element.length>0){
+            element[0].parentNode.removeChild(element[0]);
+        }
+    }
+
+    var body = document.getElementsByTagName("BODY")[0];
+    body.style.backgroundColor = "white";
+
+    var content = document.getElementById('content');
+    content.classList.remove("mw-body");
+    content.style.margin = null;
+    content.style.paddingInlineStart = "10px";
+    content.style.color = "black";
+    content.style.backgroundColor = "white";
+    content.style.marginInlineStart = "200px";
+    content.style.fontFamily = "tahoma";
+
+    fetch(chrome.runtime.getURL('/navigation.html'))
+        .then(response => response.text())
+        .then(data => {
+            content.parentNode.insertAdjacentHTML('afterbegin',data);
+            updateDrawer();
+        }).catch(err => {
+
+        });
+    
+}
+
+
+function updateDrawer(){
+
+    var drawerDiv = document.getElementById("drawer-main-div");
+    var links = [{url: "URL1:)xxxxxxxxxxxxxxxxx"},{url: "URL 2 :|"},{url: "URL 3 :("}];
+    
+    for(const link of links){
+        var linkDiv = document.createElement("div");
+        linkDiv.classList.add('menu-item');
+        var clickLink = document.createElement("a");
+        clickLink.innerHTML = link.url;
+        drawerDiv.appendChild(linkDiv);
+        linkDiv.appendChild(clickLink);
+    }
+}
 
 fetch('https://127.0.0.1:5000/insert')
     .then(response => response.text())
@@ -109,6 +169,7 @@ var actualCode = `
     });`
 
 
+stripArticle();
 
 var script = document.createElement('script');
 script.textContent = actualCode;
