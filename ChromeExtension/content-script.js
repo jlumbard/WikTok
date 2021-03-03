@@ -108,8 +108,8 @@ fetch('https://127.0.0.1:5000/insert')
             arrow.addEventListener('click', function () {
                 console.log("test")
                 var url = 'https://127.0.0.1:5000/getNextArticle'
-                var currentArticle = ""
-                if (window.location.href.includes('/wiki/')) {
+                var currentArticle=""
+                if(window.location.href.includes('/wiki/')){
                     currentArticle = window.location.href
                     console.log(currentArticle)
                 }
