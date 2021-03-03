@@ -67,7 +67,7 @@ def getNextArticle():
         return redirect(url_for('homeTestPage'))
     
 
-    nextArticleUrl = PredictNextArticle.predictNextArticlev1(currentURL,user['session']['id'])
+    nextArticleUrl = PredictNextArticle.predictNextArticlev1(currentURL,session['user']['id'])
     ArticleDataUtilities.pushDataOnArticle(nextArticleUrl)
     print(nextArticleUrl)
     return nextArticleUrl

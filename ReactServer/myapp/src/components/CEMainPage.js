@@ -13,6 +13,7 @@ const stylesForDashboard = `
   margin: 15px;
   width:100%;
   margin-bottom: 20px;
+  align-items: center;
 }
 
 .vitalStats{
