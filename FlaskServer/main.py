@@ -62,7 +62,7 @@ def getNextArticle():
     print("Current Article is:")
     print(request.args.get('currentURL',None))
     currentURL = request.args.get('currentURL',None)
-    if(!session.get('user',False)):
+    if( not session.get('user',False)):
         print("user not in session")
         return redirect(url_for('homeTestPage'))
     
