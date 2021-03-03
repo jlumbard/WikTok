@@ -98,7 +98,7 @@ fetch('https://127.0.0.1:5000/insert')
                 var url = 'https://127.0.0.1:5000/getNextArticle'
                 var currentArticle=""
                 if(window.location.href.includes('/wiki/')){
-                    currentArticle = window.location.href.split('/wiki/')[1]
+                    currentArticle = window.location.href
                     console.log(currentArticle)
                 }
                 if(currentArticle != ""){
