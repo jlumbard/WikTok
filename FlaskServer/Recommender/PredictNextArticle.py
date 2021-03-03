@@ -84,13 +84,24 @@ def computeCosineSim():
 
     return cosine_sim, metadata
 
-def getContentBasedRecs():
+def getContentBasedRecs(userID):
+
+    OnboardingItems = CosmosUtilities.getUsersOnboardedArticles(userID)
+    #Filter it to just the ArticleNames
+    articleNames =[]
+    for articleInteraction in OnboardingItems:
+        articleNames.append(articleInteraction['article'].replace('?printable=yes',""))
+
+
     #this just returns a random response
     # res = requests.get('https://en.wikipedia.org/wiki/Special:Random')
 
     # return res.url
   
-    titlesArray = ['https://en.wikipedia.org/wiki/Toronto_Raptors','https://en.wikipedia.org/wiki/Toronto_Maple_Leafs', 'https://en.wikipedia.org/wiki/Tyler,_the_Creator']
+    #titlesArray = ['https://en.wikipedia.org/wiki/Toronto_Raptors','https://en.wikipedia.org/wiki/Toronto_Maple_Leafs', 'https://en.wikipedia.org/wiki/Tyler,_the_Creator']
+    titlesArray = articleNames
+    #Changed from hardcoded.
+    
     #input var title is array of "liked" titles that were inputted by the user through onboarding
     cosine_sim, metadata = computeCosineSim()
     similarArticles = []
@@ -127,8 +138,13 @@ def getContentBasedRecs():
 
     return modifiedSimilarArticles
 
-def predictNextArticlev1(currentURL):
-    contentBasedRecs = getContentBasedRecs()
+def predictNextArticlev1(currentURL, userID):
+
+    
+    
+
+
+    contentBasedRecs = getContentBasedRecs(userID)
     popularityBasedRecs = getPopularityBasedRecs()
     
     allInitialRecommendations = contentBasedRecs + popularityBasedRecs

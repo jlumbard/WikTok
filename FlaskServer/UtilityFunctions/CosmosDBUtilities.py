@@ -115,8 +115,7 @@ def pushOnboardedArticles(articleTitle, userID):
 def getUsersOnboardedArticles(userID):
     container = getContainer(INTERACTIONS_CONTAINER_ID)
     
-    query = "SELECT * FROM InteractionsV1 i WHERE i.userID = @UniqueID"
-
+    query = "SELECT * FROM InteractionsV1 i WHERE i.userID = @UniqueID AND Onboarding == true"
     items = list(container.query_items(
         query=query,
         enable_cross_partition_query=True,

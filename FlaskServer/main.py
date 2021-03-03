@@ -62,7 +62,12 @@ def getNextArticle():
     print("Current Article is:")
     print(request.args.get('currentURL',None))
     currentURL = request.args.get('currentURL',None)
-    nextArticleUrl = PredictNextArticle.predictNextArticlev1(currentURL)
+    if(!session.get('user',False)):
+        print("user not in session")
+        return redirect(url_for('homeTestPage'))
+    
+
+    nextArticleUrl = PredictNextArticle.predictNextArticlev1(currentURL,user['session']['id'])
     ArticleDataUtilities.pushDataOnArticle(nextArticleUrl)
     print(nextArticleUrl)
     return nextArticleUrl
