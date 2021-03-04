@@ -130,11 +130,7 @@ def getContentBasedRecs(userID):
         for i in range (len(titleOfArticle)):
             similarArticles.append(res[i])
 
-
-
     modifiedSimilarArticles =  removeArticlesRead(np.array(similarArticles))
-
-   
 
     return modifiedSimilarArticles
 
@@ -145,10 +141,21 @@ def predictNextArticlev1(currentURL, userID):
     popularityBasedRecs = getPopularityBasedRecs()
     
     allInitialRecommendations = contentBasedRecs + popularityBasedRecs
-    
+
+    # loop through all initial recommendations and check if the currentURL is recommended, remove if true
+    for i in range (len(allInitialRecommendations)):
+        if (allInitialRecommendations[i] == currentURL):
+            allInitialRecommendations.remove(currentURL)
+
+    # return array of all initial recommendations
+    returnOnAllRecommendedArticles(allInitialRecommendations)
 
     if not allInitialRecommendations:
         CFRecommendations = collaborativeFiltering()
+        returnOnAllRecommendedArticles(CFRecommendations)
+        for i in range (len(CFRecommendations)):
+            if (CFRecommendations[i] == currentURL):
+                CFRecommendations.remove(currentURL)
         print('CF RECS')
         index = random.randint(0,len(CFRecommendations)-1)
         CFRecommendationsWithoutPrintables = []
@@ -308,5 +315,11 @@ class matrixFactorization():
         Computer the full matrix using the resultant biases, P and Q
         """
         return self.b + self.b_u[:,np.newaxis] + self.b_i[np.newaxis:,] + self.P.dot(self.Q.T)
+
+# return list of articles
+def returnOnAllRecommendedArticles(combinedArticles):
+    print("articles list for side tab: ")
+    print(combinedArticles)
+    return combinedArticles
 
 
