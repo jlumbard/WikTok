@@ -179,6 +179,14 @@ def signIn():
 def logInPage():
     return render_template('login.html')
 
+@app.route('/getPopularityBasedRecs', methods=['GET'])
+@cross_origin(supports_credentials=True, origin=['https://en.wikipedia.org/', 'https://127.0.0.1/', 'http://127.0.0.1:3000'])
+def getPopularityBasedRecs():
+    if(not session.get('user',False)):
+        return "Error"
+    pBasedRecs = PredictNextArticle.getPopularityBasedRecs()
+    return str(pBasedRecs)
+
 @app.route('/AddDataScripting', methods=['GET'])
 def AddData():
     df = pd.read_csv('/Users/brocklumbard/Desktop/SampleWikiDB-v1.csv')

@@ -154,8 +154,6 @@ var actualCode = `
     if((e.deltaX - window.lastX)*4 > 150){
         console.log("Forward to next")
         document.getElementById('swipeIndicator').style.backgroundColor = 'red';
-        document.getElementById('swipeIndicator').style.width = e.deltaX - window.lastX*4;
-        document.getElementById('swipeIndicator').style.height = e.deltaX - window.lastX*4;
         console.log("test")
         var url = 'https://127.0.0.1:5000/getNextArticle'
         var currentArticle = ""
@@ -179,7 +177,7 @@ var actualCode = `
     }
     
     
-    console.log(window.xposX);
+
     
     
     if(e.deltaX >0 && window.lastX>0){//if its positive, movement is to right
@@ -197,14 +195,14 @@ var actualCode = `
     
         var val = 'translate3D('+window.xposX+'px, 0px, 0px)'
         document.getElementById('swipeIndicator').style.transform = val;
+        console.log(Math.abs((e.deltaX - window.lastX)*4));
+        document.getElementById('swipeIndicator').style.width = Math.abs((e.deltaX - window.lastX)*4);
+        document.getElementById('swipeIndicator').style.height = Math.abs((e.deltaX - window.lastX)*4);
     }
     
     if(e.deltaX>20 && window.lastX>20){
     console.log("both larger than 20");
     }
-        
-        console.log(e.deltaX);
-        console.log(window.lastX);
     window.lastX = e.deltaX
     });`
 
