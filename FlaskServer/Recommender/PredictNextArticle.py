@@ -13,6 +13,7 @@ import jenkspy
 
 #This will host a series of prediction algorithm candidates, one of which will be selected to be deployed to production
 
+articles = []
 
 def removeArticlesRead(similarArticles):
     
@@ -148,11 +149,11 @@ def predictNextArticlev1(currentURL, userID):
             allInitialRecommendations.remove(currentURL)
 
     # return array of all initial recommendations
-    returnOnAllRecommendedArticles(allInitialRecommendations)
+    articles.append(allInitialRecommendations)
 
     if not allInitialRecommendations:
         CFRecommendations = collaborativeFiltering()
-        returnOnAllRecommendedArticles(CFRecommendations)
+        articles.append(CFRecommendations)
         for i in range (len(CFRecommendations)):
             if (CFRecommendations[i] == currentURL):
                 CFRecommendations.remove(currentURL)
@@ -317,9 +318,9 @@ class matrixFactorization():
         return self.b + self.b_u[:,np.newaxis] + self.b_i[np.newaxis:,] + self.P.dot(self.Q.T)
 
 # return list of articles
-def returnOnAllRecommendedArticles(combinedArticles):
+def returnAllRecommendedArticles():
     print("articles list for side tab: ")
-    print(combinedArticles)
-    return combinedArticles
+    print(articles)
+    return articles
 
 
