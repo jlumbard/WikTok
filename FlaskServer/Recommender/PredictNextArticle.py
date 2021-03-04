@@ -84,11 +84,11 @@ def computeCosineSim():
 
 def getContentBasedRecs(userID):
 
-    # OnboardingItems = CosmosUtilities.getUsersOnboardedArticles(userID)
-    # #Filter it to just the ArticleNames
-    # articleNames =[]
-    # for articleInteraction in OnboardingItems:
-    #     articleNames.append(articleInteraction['article'].replace('?printable=yes',""))
+    OnboardingItems = CosmosUtilities.getUsersOnboardedArticles(userID)
+    #Filter it to just the ArticleNames
+    articleNames =[]
+    for articleInteraction in OnboardingItems:
+        articleNames.append(articleInteraction['article'].replace('?printable=yes',""))
 
 
     #this just returns a random response
@@ -96,8 +96,8 @@ def getContentBasedRecs(userID):
 
     # return res.url
   
-    titlesArray = ['https://en.wikipedia.org/wiki/Toronto_Raptors','https://en.wikipedia.org/wiki/Toronto_Maple_Leafs', 'https://en.wikipedia.org/wiki/Tyler,_the_Creator']
-    # titlesArray = articleNames
+    # titlesArray = ['https://en.wikipedia.org/wiki/Toronto_Raptors','https://en.wikipedia.org/wiki/Toronto_Maple_Leafs', 'https://en.wikipedia.org/wiki/Tyler,_the_Creator']
+    titlesArray = articleNames
     #Changed from hardcoded.
     
     #input var title is array of "liked" titles that were inputted by the user through onboarding
@@ -141,9 +141,14 @@ def predictNextArticlev1(currentURL, userID):
     allInitialRecommendations = contentBasedRecs + popularityBasedRecs
 
     # loop through all initial recommendations and check if the currentURL is recommended, remove if true
-    for i in range (len(allInitialRecommendations)-1):
-        if (allInitialRecommendations[i] == currentURL):
+
+    for x in allInitialRecommendations:
+        if x == currentURL:
             allInitialRecommendations.remove(currentURL)
+
+    # for i in range (len(allInitialRecommendations)-1):
+    #     if (allInitialRecommendations[i] == currentURL):
+    #         allInitialRecommendations.remove(currentURL)
 
     # # return array of all initial recommendations
     # articles.append(allInitialRecommendations)
@@ -154,7 +159,7 @@ def predictNextArticlev1(currentURL, userID):
         for i in range (len(CFRecommendations)-1):
             if (CFRecommendations[i] == currentURL):
                 CFRecommendations.remove(currentURL)
-        print('CF RECS')
+        print('PROVIDING COLLABORATIVE FILTERING RECOMMENDATION...')
         index = random.randint(0,len(CFRecommendations)-1)
         CFRecommendationsWithoutPrintables = []
         print(CFRecommendationsWithoutPrintables)
@@ -167,7 +172,7 @@ def predictNextArticlev1(currentURL, userID):
                 CFRecommendationsWithoutPrintables.append(x)
         return CFRecommendationsWithoutPrintables[index]
     else:
-        print("CONTENT BASED RECS")
+        print("PROVIDING CONTENT/POPULARITY BASED RECOMMENDATION...")
         index = random.randint(0,len(allInitialRecommendations)-1)
        
         # print(allInitialRecommendations)
