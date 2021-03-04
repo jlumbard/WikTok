@@ -196,8 +196,8 @@ var actualCode = `
         var val = 'translate3D('+window.xposX+'px, 0px, 0px)'
         document.getElementById('swipeIndicator').style.transform = val;
         console.log(Math.abs((e.deltaX - window.lastX)*4));
-        document.getElementById('swipeIndicator').style.width = Math.abs((e.deltaX - window.lastX)*4);
-        document.getElementById('swipeIndicator').style.height = Math.abs((e.deltaX - window.lastX)*4);
+        document.getElementById('swipeIndicator').style.width = Math.min(Math.max(Math.abs((e.deltaX - window.lastX)*4),5),30)+'px';
+        document.getElementById('swipeIndicator').style.height = Math.min(Math.max(Math.abs((e.deltaX - window.lastX)*4),5),30)+'px';
     }
     
     if(e.deltaX>20 && window.lastX>20){
