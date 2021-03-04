@@ -9,7 +9,6 @@ import UtilityFunctions.ArticleDataUtilities as ArticleDataUtilities
 from flask_cors import CORS, cross_origin
 import pandas as pd
 import random
-import datetime
 
 #TO RUN:
 #export FLASK_APP=main.py
@@ -60,15 +59,7 @@ def getNextArticle():
     #article they're currently on and their engagement with it should already be pushed, seperate endpoint.
     # or should it?
     #returns, next article to nav to and then client side javascript just redirects them there.
-    print("Current Article is:")
-    print(request.args.get('currentURL',None))
-    currentURL = request.args.get('currentURL',None)
-    if( not session.get('user',False)):
-        print("user not in session")
-        return redirect(url_for('homeTestPage'))
-    
-
-    nextArticleUrl = PredictNextArticle.predictNextArticlev1(currentURL,session['user']['id'])
+    nextArticleUrl = PredictNextArticle.predictNextArticlev1()
     ArticleDataUtilities.pushDataOnArticle(nextArticleUrl)
     print(nextArticleUrl)
     return nextArticleUrl
@@ -101,26 +92,6 @@ def pushUserInteraction():
 @cross_origin()
 def getInsert():
     return render_template('LeftRightArrows.html')
-
-@app.route('/getRecentStats',methods=['GET'])
-@cross_origin(supports_credentials=True, origin=['https://en.wikipedia.org/', 'https://127.0.0.1/'])
-def getRecentStats():
-    if( not session.get('user',False)):
-        return "ERROR"
-    allArticles = CosmosUtilities.getAllArticlesReadData(session['user']['id'])
-    #convert back to datetime
-    articlesRead = 0
-    minutesRead = 0
-    for x in allArticles:
-        if(x.get('datePushed',False)):
-            x['datePushed'] = datetime.datetime.strptime(x['datePushed'].replace('"',''),"%d/%m/%Y %H:%M:%S")
-            if(x['datePushed'] >= datetime.datetime.now() - datetime.timedelta(hours=24)):
-                #if its less than a day old
-                articlesRead += 1
-                minutesRead += abs(x['timeSpent'])
-    favoriteTopic = "Music"
-    mostRecentTopic = "Music"
-    return {'articlesRead':articlesRead, 'minutesRead':minutesRead,'favoriteTopic':favoriteTopic,'mostRecentTopic':mostRecentTopic}
 
 @app.route('/getUser',methods=['GET'])
 @cross_origin(supports_credentials=True, origin=['https://en.wikipedia.org/', 'https://127.0.0.1/', 'http://127.0.0.1/'])
@@ -178,14 +149,6 @@ def signIn():
 @app.route('/logIn', methods=['GET'])
 def logInPage():
     return render_template('login.html')
-
-@app.route('/getPopularityBasedRecs', methods=['GET'])
-@cross_origin(supports_credentials=True, origin=['https://en.wikipedia.org/', 'https://127.0.0.1/', 'http://127.0.0.1:3000'])
-def getPopularityBasedRecs():
-    if(not session.get('user',False)):
-        return "Error"
-    pBasedRecs = PredictNextArticle.getPopularityBasedRecs()
-    return str(pBasedRecs)
 
 @app.route('/AddDataScripting', methods=['GET'])
 def AddData():
