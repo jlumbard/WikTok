@@ -80,17 +80,44 @@ function updateDrawer() {
     var drawerDiv = document.getElementById("drawer-main-div");
     var links = [{ url: "URL1:)xxxxxxxxxxxxxxxxx" }, { url: "URL 2 :|" }, { url: "URL 3 :(" }];
 
-    for (const link of links) {
-        var linkDiv = document.createElement("div");
-        linkDiv.classList.add('menu-item');
-        var clickLink = document.createElement("a");
 
-        // May need to change the line below (.url to something else); not sure what form data comes in.
-        
-        clickLink.innerHTML = link.url;
-        drawerDiv.appendChild(linkDiv);
-        linkDiv.appendChild(clickLink);
+    //Get the new data for the sidebar
+    var url = 'https://127.0.0.1:5000/getPopularityBasedRecs'
+    var currentArticle = ""
+    if (window.location.href.includes('/wiki/')) {
+        currentArticle = window.location.href
+        console.log(currentArticle)
     }
+    if (currentArticle != "") {
+        url = url + "?currentURL=" + currentArticle
+    } ``
+
+    fetch(url, {
+        credentials: 'include',
+        crossDomain: true, mode: 'cors'
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data)
+        console.log(data['arr'])
+        console.log(data)
+
+        for (const link of data['arr']) {
+            console.log(link)
+            var linkDiv = document.createElement("div");
+            linkDiv.classList.add('menu-item');
+            var clickLink = document.createElement("a");
+    
+            // May need to change the line below (.url to something else); not sure what form data comes in.
+            
+            clickLink.innerHTML = decodeURI(link.split('wiki/')[1]).replace(/_/g, ' ');
+
+            drawerDiv.appendChild(linkDiv);
+            linkDiv.appendChild(clickLink);
+        }
+    })
+
+    
 }
 
 fetch('https://127.0.0.1:5000/insert')

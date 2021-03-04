@@ -184,8 +184,8 @@ def logInPage():
 def getPopularityBasedRecs():
     if(not session.get('user',False)):
         return "Error"
-    pBasedRecs = PredictNextArticle.getPopularityBasedRecs()
-    return str(pBasedRecs)
+    pBasedRecs = PredictNextArticle.returnRecsForSideTab(request.args.get('currentURL',None),session['user']['id'])
+    return {'arr':pBasedRecs}
 
 @app.route('/AddDataScripting', methods=['GET'])
 def AddData():
