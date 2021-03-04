@@ -11,9 +11,6 @@ import numpy as np
 from scipy import stats
 import jenkspy
 
-#This will host a series of prediction algorithm candidates, one of which will be selected to be deployed to production
-
-articles = []
 
 def removeArticlesRead(similarArticles):
     
@@ -87,11 +84,11 @@ def computeCosineSim():
 
 def getContentBasedRecs(userID):
 
-    OnboardingItems = CosmosUtilities.getUsersOnboardedArticles(userID)
-    #Filter it to just the ArticleNames
-    articleNames =[]
-    for articleInteraction in OnboardingItems:
-        articleNames.append(articleInteraction['article'].replace('?printable=yes',""))
+    # OnboardingItems = CosmosUtilities.getUsersOnboardedArticles(userID)
+    # #Filter it to just the ArticleNames
+    # articleNames =[]
+    # for articleInteraction in OnboardingItems:
+    #     articleNames.append(articleInteraction['article'].replace('?printable=yes',""))
 
 
     #this just returns a random response
@@ -99,8 +96,8 @@ def getContentBasedRecs(userID):
 
     # return res.url
   
-    #titlesArray = ['https://en.wikipedia.org/wiki/Toronto_Raptors','https://en.wikipedia.org/wiki/Toronto_Maple_Leafs', 'https://en.wikipedia.org/wiki/Tyler,_the_Creator']
-    titlesArray = articleNames
+    titlesArray = ['https://en.wikipedia.org/wiki/Toronto_Raptors','https://en.wikipedia.org/wiki/Toronto_Maple_Leafs', 'https://en.wikipedia.org/wiki/Tyler,_the_Creator']
+    # titlesArray = articleNames
     #Changed from hardcoded.
     
     #input var title is array of "liked" titles that were inputted by the user through onboarding
@@ -144,17 +141,17 @@ def predictNextArticlev1(currentURL, userID):
     allInitialRecommendations = contentBasedRecs + popularityBasedRecs
 
     # loop through all initial recommendations and check if the currentURL is recommended, remove if true
-    for i in range (len(allInitialRecommendations)):
+    for i in range (len(allInitialRecommendations)-1):
         if (allInitialRecommendations[i] == currentURL):
             allInitialRecommendations.remove(currentURL)
 
-    # return array of all initial recommendations
-    articles.append(allInitialRecommendations)
+    # # return array of all initial recommendations
+    # articles.append(allInitialRecommendations)
 
     if not allInitialRecommendations:
         CFRecommendations = collaborativeFiltering()
-        articles.append(CFRecommendations)
-        for i in range (len(CFRecommendations)):
+        # articles.append(CFRecommendations)
+        for i in range (len(CFRecommendations)-1):
             if (CFRecommendations[i] == currentURL):
                 CFRecommendations.remove(currentURL)
         print('CF RECS')
@@ -208,7 +205,7 @@ def collaborativeFiltering():
     df = pd.DataFrame(mf.full_matrix(), columns = columns )
     df['article'] = ratingsTable['article'].values
     df.set_index('article', inplace = True)
-    recommendedArticles = getCFArticles(df)
+    recommendedArticles = getCFArticles(df).tolist()
     
 
     return recommendedArticles
@@ -318,9 +315,46 @@ class matrixFactorization():
         return self.b + self.b_u[:,np.newaxis] + self.b_i[np.newaxis:,] + self.P.dot(self.Q.T)
 
 # return list of articles
-def returnAllRecommendedArticles():
+def returnRecsForSideTab(currentURL, userID):
+
+    articles = []
+    print('THE CURRENT URL IS: ')
+    print(currentURL)
+    contentBasedRecs = getContentBasedRecs(userID)
+    popularityBasedRecs = getPopularityBasedRecs()
+    CFRecommendations = collaborativeFiltering()
+    
+    articles = contentBasedRecs + popularityBasedRecs + CFRecommendations
+
+    # loop through all initial recommendations and check if the currentURL is recommended, remove if true
+    for i in range (len(articles)-1):
+        if (articles[i] == currentURL):
+            articles.remove(currentURL)
+  
+
+    RecommendationsWithoutPrintables = []
+        # print(CFRecommendationsWithoutPrintables)
+    for x in articles:
+        #Sometimes the links pulled from the database have "printable" appended at the end. 
+        #remove it if so.
+        if('?printable=yes' in x):
+            RecommendationsWithoutPrintables.append(x.replace('?printable=yes',''))
+        else:
+            RecommendationsWithoutPrintables.append(x)
+    
+  
+   
+
+    recommendationsNoDuplicates = []
+    for x in RecommendationsWithoutPrintables:
+        if x not in recommendationsNoDuplicates:
+            recommendationsNoDuplicates.append(x)
+
     print("articles list for side tab: ")
-    print(articles)
-    return articles
+    print(recommendationsNoDuplicates)
+
+    print("length: ")
+    print(len(recommendationsNoDuplicates))
+    return recommendationsNoDuplicates
 
 
