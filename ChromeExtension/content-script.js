@@ -58,7 +58,7 @@ function stripArticle() {
     content.style.paddingInlineStart = "10px";
     content.style.color = "black";
     content.style.backgroundColor = "white";
-    content.style.marginInlineStart = "200px";
+    content.style.marginInlineStart = "225px";
     content.style.fontFamily = "tahoma";
 
     fetch(chrome.runtime.getURL('/navigation.html'))
@@ -73,6 +73,8 @@ function stripArticle() {
 }
 
 
+// Missing logic to connect menu items. Just need to substitute the "links" var for array of URLs. 
+
 function updateDrawer() {
 
     var drawerDiv = document.getElementById("drawer-main-div");
@@ -82,6 +84,9 @@ function updateDrawer() {
         var linkDiv = document.createElement("div");
         linkDiv.classList.add('menu-item');
         var clickLink = document.createElement("a");
+
+        // May need to change the line below (.url to something else); not sure what form data comes in.
+        
         clickLink.innerHTML = link.url;
         drawerDiv.appendChild(linkDiv);
         linkDiv.appendChild(clickLink);

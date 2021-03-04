@@ -1,11 +1,13 @@
 import React from 'react';
-import { Text } from '@fluentui/react';
+import { ScrollablePane, Text } from '@fluentui/react';
 import { Link } from 'react-router-dom'
 import LogoImage from '../images/logo.png';
 
 var outerContainerStyle = {
   width: '100%',
-  height: '100%',
+  height: '100vh',
+  background: "rgba(0,0,0,0.5)",
+  backdropFilter: "blur(10px)",
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -15,8 +17,6 @@ var outerContainerStyle = {
 var sectionStyle = {
   width: "65vw",
   height: "65vh",
-  background: "rgba(0,0,0,0.5)",
-  backdropFilter: "blur(10px)",
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -37,12 +37,18 @@ var eachFormsStyle = {
   color: "white"
 }
 var skipButtonStyles = {
-  padding: "10px",
-  background: "rgba(0, 0, 0, 0.5)",
+  padding: "5px",
   backdropFilter: "blur(10px)",
-  color: "white",
+  background: "#70edb9",
+  fontFamily: "arial",
+  fontSize: "15px",
+  color: "fff",
   cursor: "pointer",
+  marginTop: "10px",
   marginBottom:"auto",
+  "&:hover": {
+    background: "#red"
+  }
 }
 
 var topHeaderStyles = {
@@ -76,7 +82,8 @@ var textStyleSmall = {
 
 var belowTextStyles = {
   color: "White",
-  fontFamily: "Open Sans",
+  fontFamily: "Arial",
+  fontSize: "18px",
   margin: '10px',
   textAlign: 'center'
 }
@@ -291,25 +298,26 @@ export default class Onboarding extends React.Component {
       return (
         <div className="testClass" style={outerContainerStyle}>
           <div className="topHeader" style={topHeaderStyles}>
-            <div onClick = {this.pushOnboardingArticles} className="skipButton" style={skipButtonStyles}>Skip</div>
+            
 
           </div>
-        <div id="iframeSection" style={sectionStyle}>
-          <img style={ImageStyle} src={LogoImage}></img>
+          <div id="iframeSection" style={sectionStyle}>
+            <img style={ImageStyle} src={LogoImage}></img>
 
 
-          <iframe style={iFrameStyles} src={this.state.articles[Object.keys(this.state.articles)[0]][0] + "?printable=yes"}>
+            <iframe style={iFrameStyles} src={this.state.articles[Object.keys(this.state.articles)[0]][0] + "?printable=yes"}>
 
-          </iframe>
-          <div style={belowTextStyles}>
-            Do you think you'd like this article?
+            </iframe>
+            <div style={belowTextStyles}>
+              Is this an article you'd read?
               </div>
-          <div style={{display:'inline'}}>
-            <div onClick={this.likeButtonClicked} style={{display:'inline', margin:"10px", cursor:"pointer"}}>&#128077;</div>
-            <div onClick={this.disLikeButtonClicked} style={{display:'inline', margin:"10px", cursor:"pointer"}}>&#128078;</div>
-          </div>
+            <div style={{ display: 'inline' }}>
+              <div onClick={this.likeButtonClicked} style={{ display: 'inline', margin: "10px", cursor: "pointer", fontSize: "30px" }}>&#128077;</div>
+              <div onClick={this.disLikeButtonClicked} style={{ display: 'inline', margin: "10px", cursor: "pointer", fontSize: "30px" }}>&#128078;</div>
+            </div>
+            <div onClick={this.pushOnboardingArticles} className="skipButton" style={skipButtonStyles}>Skip Article</div>
 
-        </div>
+          </div>
         </div>
       )
     }

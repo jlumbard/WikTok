@@ -67,7 +67,6 @@ export default class SignUp extends React.Component {
           <img src={logo} alt="" />
         </LogoWrapper>
         
-
         <Form>
 
         <StyledInput required placeholder="Email" ref={(ref) => { this.email = ref }} label="Username" />
@@ -123,7 +122,7 @@ const Form = styled.form`
 
 const Container = styled.div`
   min-width: 100%;
-
+  min-height: 100vh;
   background-color: rgba(255, 255, 255, 0.8);
   height: 100%;
   display: flex;

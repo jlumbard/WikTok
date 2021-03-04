@@ -15,23 +15,13 @@ var textStyle = {
 }
 
 var linkStyle = {
-  color:"black",
-}
-
-var textStyleSmall = {
-
-  textAlign:"center",
-  fontFamily: "Open Sans",
-  fontSize: "4vw",
-  marginTop: "5px",
-  marginBottom: "5px",
-  color:"white"
+  color:"white",
+  fontFamily: "Arial",
+  textDecorationLine: "none"
 
 }
 
-var ImageStyle = {
-  width: "50%",
-}
+
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -97,7 +87,7 @@ export default class Home extends React.Component {
           <Container>
             <CoveredDiv id="modal">
               <div>
-              You haven't onboarded yet. Onboarding helps us guess what kind of articles you like!
+              You haven't onboarded yet. Onboarding helps us predict what kind of articles you like!
               </div>
               <button onClick={this.hideModal}>Skip</button>
               {/* need to mark as onboarded */}
@@ -136,9 +126,16 @@ export default class Home extends React.Component {
           <h4 >
             Welcome, {this.state.user.fname}!
           </h4>
-          <h4 style={{marginTop:"1rem"}}>
-            <a style = {linkStyle} href="/accountPage">Manage your account</a>, <a style = {linkStyle} href="/logOut">log out</a>, or view a <a style = {linkStyle} href="https://en.wikipedia.org/wiki/Special:Random">random Wikipedia Article!</a>
-          </h4>
+
+          <StyledButton>
+            <a style = {linkStyle} href="/accountPage">Manage Account</a>
+          </StyledButton>
+          <StyledButton>
+            <a style = {linkStyle} href="/logOut">Log Out</a>
+          </StyledButton>
+          <StyledButton>
+            <a style = {linkStyle} href="https://en.wikipedia.org/wiki/Special:Random">View Random Article</a>
+          </StyledButton>
 
         </Container>
       );
@@ -231,6 +228,26 @@ const Container = styled.div`
     
   }
 `;
+
+const StyledButton = styled.button`
+width: 75%;
+    max-width: 350px;
+    min-width: 250px;
+    height: 40px;
+    border: none;
+    margin: 1rem 0;
+    box-shadow: 0px 14px 9px -15px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    background-color: #70edb9;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in;
+    &:hover {
+      transform: translateY(-3px);
+    }
+    `;
+
 
 const LogoWrapper = styled.div`
   img {

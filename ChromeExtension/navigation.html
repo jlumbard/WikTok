@@ -8,9 +8,9 @@
             .main {
                 background: white;
                 float: left;
-                height: 100%;
-                width: 200px;
-                min-width: 200px;
+                position: fixed;
+                width: 225px;
+                min-width: 225px;
                 
             }
             .menu-item {
@@ -28,7 +28,7 @@
                 vertical-align: middle;
                 word-wrap: break-word;
             }
-            img {
+            #wiktokImg {
                 height: 3rem;
                 display: block;
                 margin: 0 auto;
@@ -41,24 +41,12 @@
 
 <body>
     <div id = "drawer-main-div" class = "main">
-  
-            <img src = "https://i.ibb.co/hLZ1Q2K/logo.png">
-        <div class = "menu-item">
-            <a href="https://en.wikipedia.org/wiki/Valorant">
-                Valorant</a></div>
-        <div class = "menu-item">
-            <a href="https://en.wikipedia.org/wiki/Video_game_design">
-            Video Game Design</a></div>
-        <div class = "menu-item">TEST MENU ITEM</div>
+            <img id="wiktokImg" src = "https://i.ibb.co/hLZ1Q2K/logo.png">
 
-        
+            <!-- This is where we are dynamically adding menu items from the content script. -->      
 
     </div>
-
-    
+   
 </body>
-
-
-
 </html>
 
