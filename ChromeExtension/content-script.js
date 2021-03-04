@@ -184,7 +184,7 @@ var actualCode = `
         console.log("made dot");
         if(!document.contains(document.getElementById('swipeIndicator'))){
             var swipeIndicator = document.createElement('div');
-            swipeIndicator.style = "position:absolute;left:50%;top:50%;width:5px;height:5px;border-radius:2.5px;background-color:black;"
+            swipeIndicator.style = "position:absolute;left:50%;top:50%;width:5px;height:5px;border-radius:2.5px;background-color:rgba(0,0,0,0.5);"
             swipeIndicator.id = "swipeIndicator";
             document.querySelector('body').appendChild(swipeIndicator);
         }
@@ -195,9 +195,11 @@ var actualCode = `
     
         var val = 'translate3D('+window.xposX+'px, 0px, 0px)'
         document.getElementById('swipeIndicator').style.transform = val;
+        document.getElementById('swipeIndicator').style.backgroundColor = "rgba(255,0,0,0.2)"
         console.log(Math.abs((e.deltaX - window.lastX)*4));
         document.getElementById('swipeIndicator').style.width = Math.min(Math.max(Math.abs((e.deltaX - window.lastX)*4),5),30)+'px';
         document.getElementById('swipeIndicator').style.height = Math.min(Math.max(Math.abs((e.deltaX - window.lastX)*4),5),30)+'px';
+        document.getElementById('swipeIndicator').style.borderRadius = Math.min(Math.max(Math.abs((e.deltaX - window.lastX)*4),5),30)/2 +'px';
     }
     
     if(e.deltaX>20 && window.lastX>20){
