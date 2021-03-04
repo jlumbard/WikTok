@@ -22,7 +22,7 @@ function moveToNextArticle() {
         .then(response => response.text())
         .then(data => {
             console.log(data)
-            window.location.replace(data)
+            window.location.href = data
         })
 
 }
@@ -102,7 +102,13 @@ fetch('https://127.0.0.1:5000/insert')
             });
         })
 
-        var arrows = document.querySelectorAll('.arrow')
+        var leftArrow = document.getElementById('leftArrow')
+
+        leftArrow.addEventListener('click',function(){
+            history.back()
+        })
+
+        var arrows = document.querySelectorAll('#rightArrow')
         for (const arrow of arrows) {
             console.log("arrow")
             arrow.addEventListener('click', function () {
@@ -124,7 +130,7 @@ fetch('https://127.0.0.1:5000/insert')
                     .then(response => response.text())
                     .then(data => {
                         console.log(data)
-                        window.location.replace(data)
+                        window.location.href = data
                     })
             })
         }
@@ -168,7 +174,7 @@ var actualCode = `
         .then(response => response.text())
         .then(data => {
             console.log(data)
-            window.location.replace(data)
+            window.location.href = data
         }) 
     }
     
