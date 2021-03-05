@@ -233,7 +233,7 @@ export default class CEMainPage extends React.Component {
             <div className="vitalStats">
               <div className="vitalStatsDecorativeLine"></div>
               <div className='statHolder'>
-                <h3>{this.state.minutesRead}</h3>
+                <h3>{this.state.minutesRead/60}</h3>
                 <p className="statLabel">Minutes Spent</p>
               </div>
             </div>

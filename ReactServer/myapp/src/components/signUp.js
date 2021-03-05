@@ -18,14 +18,14 @@ export default class SignUp extends React.Component {
       alert("that username already exists.")
     }
     else if(this.state.text === "SUCCESS"){
-      alert("successfully signed up. Redirecting.")
+      // alert("successfully signed up. Redirecting.")
       this.props.history.push('/')
     }
   }
 
   onSubmit() {
     console.log("called alert")
-    alert('button clicked')
+    // alert('button clicked')
     fetch("https://127.0.0.1:5000/signUp", {
       method: 'POST',
       mode:'cors',

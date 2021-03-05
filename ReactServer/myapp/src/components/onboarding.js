@@ -315,7 +315,7 @@ export default class Onboarding extends React.Component {
               <div onClick={this.likeButtonClicked} style={{ display: 'inline', margin: "10px", cursor: "pointer", fontSize: "30px" }}>&#128077;</div>
               <div onClick={this.disLikeButtonClicked} style={{ display: 'inline', margin: "10px", cursor: "pointer", fontSize: "30px" }}>&#128078;</div>
             </div>
-            <div onClick={this.pushOnboardingArticles} className="skipButton" style={skipButtonStyles}>Skip Onboarding</div>
+            <div onClick={this.pushOnboardingArticles} className="skipButton" style={skipButtonStyles}>Finish Onboarding</div>
 
           </div>
         </div>

@@ -18,14 +18,14 @@ export default class SignIn extends React.Component {
 
     }
     else if (this.state.loggedIn === true) {
-      alert("successfully logged in. Redirecting.")
+      // alert("successfully logged in. Redirecting.")
       this.props.history.push('/')
     }
   }
 
   // I feel like this is where we need to put logic for validating inputs
   onSubmit() {
-    alert('button clicked')
+    // alert('button clicked')
     fetch("https://127.0.0.1:5000/signIn", {
       method: 'POST',
       mode: 'cors',

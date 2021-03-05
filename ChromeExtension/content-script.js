@@ -132,7 +132,8 @@ fetch('https://127.0.0.1:5000/insert')
         thumbs.addEventListener('click', function () {
             chrome.storage.sync.set({ articleLiked: true }, function () {
                 console.log("articleLikedTrue");
-                document.getElementById('thumbsUp').style.color = 'black;'
+                document.getElementById('thumbsUp').style.color = 'black';
+                document.getElementById('thumbsUp').style.color = 'rgba(0,0,0,1)';
             });
         })
 

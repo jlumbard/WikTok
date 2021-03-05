@@ -327,13 +327,17 @@ def returnRecsForSideTab(currentURL, userID):
     print(currentURL)
     contentBasedRecs = getContentBasedRecs(userID)
     popularityBasedRecs = getPopularityBasedRecs()
-    CFRecommendations = collaborativeFiltering()
+    try:
+        CFRecommendations = collaborativeFiltering()
+    except:
+        CFRecommendations = []
     
     articles = contentBasedRecs + popularityBasedRecs + CFRecommendations
 
     # loop through all initial recommendations and check if the currentURL is recommended, remove if true
-    for i in range (len(articles)-1):
-        if (articles[i] == currentURL):
+    
+    for x in articles:
+        if (x == currentURL):
             articles.remove(currentURL)
   
 
