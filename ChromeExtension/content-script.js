@@ -41,7 +41,7 @@ function stripArticle() {
         element.parentNode.removeChild(element);
     }
 
-    var elementsToClearByClass = ['box-Tone', 'box-Expand_section', 'box-Update', 'box-Multiple_issues', 'mw-indicator', 'box-More_citations_needed', 'box-More_citations_needed_section']
+    var elementsToClearByClass = ['box-Tone', 'box-Confusing','box-Expand_section', 'box-Update', 'box-Cleanup-PR','box-Multiple_issues', 'mw-indicator', 'box-More_citations_needed', 'box-More_citations_needed_section']
     for (x = 0; x < elementsToClearByClass.length; x++) {
         var element = document.getElementsByClassName(elementsToClearByClass[x]);
         while (element.length > 0) {
@@ -112,6 +112,8 @@ function updateDrawer() {
             
             clickLink.innerHTML = decodeURI(link.split('wiki/')[1]).replace(/_/g, ' ');
             clickLink.href =link;
+            clickLink.classList.add('drawer-link');
+
             drawerDiv.appendChild(linkDiv);
             linkDiv.appendChild(clickLink);
         }
