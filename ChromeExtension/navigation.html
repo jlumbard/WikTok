@@ -11,6 +11,8 @@
                 position: fixed;
                 width: 225px;
                 min-width: 225px;
+                height: 100%;
+                overflow-y: scroll;
                 
             }
             .menu-item {
@@ -31,12 +33,30 @@
                 text-align: center;
                 vertical-align: middle; 
                 word-wrap: break-word;
+                font-size: 15px;
+                color: white;
+                
             }
             #wiktokImg {
                 height: 3rem;
                 display: block;
                 margin: 0 auto;
                 margin-top: 10px;
+            }
+            .menu-item:hover{
+                background-color:orchid;
+                cursor: pointer;
+            }
+            .a:hover{
+                cursor: pointer;
+            }
+            .a{
+                text-decoration: none;
+            }
+            .drawer-link{
+                text-decoration: none;
+                color: white;
+                font-size: 15px;
             }
             
         </style>
@@ -46,6 +66,7 @@
 <body>
     <div id = "drawer-main-div" class = "main">
             <img id="wiktokImg" src = "https://i.ibb.co/hLZ1Q2K/logo.png">
+            <div class="menu-item">Test</div>
 
             <!-- This is where we are dynamically adding menu items from the content script. -->      
 
