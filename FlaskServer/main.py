@@ -81,6 +81,8 @@ def pushUserInteraction():
     #The below might work without params, depends how API works with session
     loggedIn = SessionUtilities.checkLoggedIn()
     print(loggedIn)
+
+
     if(loggedIn == False):
         #probs returning a redirect would be better
         print("Not logged in")
@@ -89,6 +91,8 @@ def pushUserInteraction():
     #don't need these things anymore
     ModifiedUserInteraction = request.json
     ModifiedUserInteraction['user'] = session['user']['id']
+    if('?printable=yes' in ModifiedUserInteraction['article']):
+        ModifiedUserInteraction['article'] = ModifiedUserInteraction['article'].replace('?printable=yes','')
     #passes info in a POST request about what the user did. No return type
     # how long did they spend on the article. What is the content of the article?
     # did they click on anything? 
