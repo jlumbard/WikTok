@@ -84,6 +84,7 @@ def getViewNumberTrend(arrayOfValues):
 
 def pushDataOnArticle(articleLink):
     print(articleLink)
+    articleLink = WikipedidCanonicalTitle(articleLink)
     articleData = returnDataOnArticle(articleLink)
     # print("WE HAVE ARRIVED OUTSIDE OF THE FUNCTION")
     articleDoesntExist = CosmosDBUtilities.getArticleByTitle(articleData['title']) #True if it doesn't exist 

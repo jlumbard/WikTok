@@ -33,10 +33,10 @@ def initContainers():
     client = cosmos_client.CosmosClient(HOST, {'masterKey': MASTER_KEY}, user_agent="CosmosDBDotnetQuickstart", user_agent_overwrite=True)
     #db = client.create_database(id=DATABASE_ID)
     db = client.get_database_client(DATABASE_ID)
-    # db.create_container(id=INTERACTIONS_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
+    db.create_container(id=INTERACTIONS_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
     db.create_container(id=PAGES_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
-    # db.create_container(id=USERS_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
-    # db.create_container(id=USERSESSION_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
+    db.create_container(id=USERS_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
+    db.create_container(id=USERSESSION_CONTAINER_ID, partition_key=PartitionKey(path='/account_number'), offer_throughput=400)
 
 def pushWikiPageData(dataArray):
     #initContainers()
