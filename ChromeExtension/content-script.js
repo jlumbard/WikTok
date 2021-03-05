@@ -111,7 +111,7 @@ function updateDrawer() {
             // May need to change the line below (.url to something else); not sure what form data comes in.
             
             clickLink.innerHTML = decodeURI(link.split('wiki/')[1]).replace(/_/g, ' ');
-
+            clickLink.href =link;
             drawerDiv.appendChild(linkDiv);
             linkDiv.appendChild(clickLink);
         }
