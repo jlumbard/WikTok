@@ -91,6 +91,7 @@ def pushUserInteraction():
     #don't need these things anymore
     ModifiedUserInteraction = request.json
     ModifiedUserInteraction['user'] = session['user']['id']
+    print(ModifiedUserInteraction)
     if('?printable=yes' in ModifiedUserInteraction['article']):
         ModifiedUserInteraction['article'] = ModifiedUserInteraction['article'].replace('?printable=yes','')
     #passes info in a POST request about what the user did. No return type
@@ -225,8 +226,8 @@ def test():
 @cross_origin(supports_credentials=True, origin=['https://en.wikipedia.org/', 'https://127.0.0.1/', 'http://127.0.0.1:3000'])
 @app.route('/getOnboardArticles', methods=['GET'])
 def getOnboardingArticles():
-    onboardingArticles = {'Sports': ['Toronto Raptors', 'National Basketball Association', "Larry O'Brien Trophy", 'Boston Celtics', 'Dallas Mavericks', 'Atlanta Hawks', 'List of National Basketball Association awards', 'Toronto Maple Leafs', 'National Hockey League', 'Edmonton Oilers', 'Boston Bruins'], 'Music': ['Nas', '2pac', 'Jay-z', 'Run-DMC', 'Tyler, the Creator', 'Drake', 'Beyoncé', 'Brockhampton', 'Kanye West', 'A Tribe Called Quest'], 'Entertainment': ['Fornite', 'PlayStation 5', 'Twitch gameplay', 'Call of Duty: Black Ops', 'Xbox Series X and Series S', 'Rocket League', 'League of Legends', 'Dumpling', 'Big Mac', 'Poutine', 'Hamburger', 'Hot dog', 'Pretzel', 'Gordon Ramsay', 'Fried dough'], 'News': ['Apple', 'Android', 'Cloud Computing', 'Microsoft', 'Amazon', 'Huawei', 'Facebook', 'Instagram', 'Sony', 'Toshiba', 'Donald Trump', 'Joe Biden', 'Barack Obama', 'Constitution of the United States', 'Democracy', 'Republican Party', 'Democratic Party']}
-    onboardingArticles = {'Sports': ['Toronto Raptors', 'National Basketball Association', 'Boston Bruins'], 'Music': ['2pac','Tyler, the Creator', 'Beyoncé'], 'Entertainment': ['Call of Duty: Black Ops','Hamburger', 'Gordon Ramsay'], 'News': ['Apple', 'Cloud Computing','Sony']}
+    onboardingArticles = {'Sports': ['Toronto Raptors', 'National Basketball Association', "Larry O'Brien Trophy", 'Boston Celtics', 'Dallas Mavericks', 'Atlanta Hawks', 'List of National Basketball Association awards', 'Toronto Maple Leafs', 'National Hockey League', 'Edmonton Oilers', 'Boston Bruins'], 'Music': ['Nas', 'Tupac Shakur', 'Jay-z', 'Run-DMC', 'Tyler, the Creator', 'Drake', 'Beyoncé', 'Brockhampton', 'Kanye West', 'A Tribe Called Quest'], 'Entertainment': ['Fornite', 'PlayStation 5', 'Twitch gameplay', 'Call of Duty: Black Ops', 'Xbox Series X and Series S', 'Rocket League', 'League of Legends', 'Dumpling', 'Big Mac', 'Poutine', 'Hamburger', 'Hot dog', 'Pretzel', 'Gordon Ramsay', 'Fried dough'], 'News': ['Apple', 'Android', 'Cloud Computing', 'Microsoft', 'Amazon', 'Huawei', 'Facebook', 'Instagram', 'Sony', 'Toshiba', 'Donald Trump', 'Joe Biden', 'Barack Obama', 'Constitution of the United States', 'Democracy', 'Republican Party', 'Democratic Party']}
+    onboardingArticles = {'Sports': ['Toronto Raptors', 'National Basketball Association', 'Boston Bruins'], 'Music': ['Tupac Shakur','Tyler, the Creator', 'Beyoncé'], 'Entertainment': ['Call of Duty: Black Ops','Hamburger', 'Gordon Ramsay'], 'News': ['Apple', 'Cloud Computing','Sony']}
     randomizedOnboardingArticles = onboardingArticles
     #shuffle the list and grab a random 3 from each category
     for articleCategory in onboardingArticles:
